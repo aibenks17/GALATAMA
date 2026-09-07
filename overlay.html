@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OVERLAY STREAM GALAHAMUY</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@600;700&display=swap');
+
+        :root {
+            --bg-glass: rgba(5, 8, 17, 0.85);
+            --accent-cyan: #00f2fe;
+            --accent-pink: #f72585;
+            --accent-yellow: #ffb703;
+            --accent-green: #06d6a0;
+            --text-main: #ffffff;
+            --border-glow: rgba(0, 242, 254, 0.4);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; }
+
+        body {
+            background-color: transparent;
+            color: var(--text-main);
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        .overlay-container {
+            width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .header-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 12px;
+            padding: 12px 16px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .mode-badge {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            color: var(--accent-yellow);
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .round-badge {
+            background: linear-gradient(135deg, var(--accent-pink), #b5179e);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: 0.75rem;
+        }
+
+        .timer-badge {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--accent-yellow);
+            text-shadow: 0 0 8px var(--accent-yellow);
+        }
+
+        .board-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 12px;
+            backdrop-filter: blur(8px);
+        }
+
+        .board-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        th {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.65rem;
+            color: #7b8fa7;
+            text-transform: uppercase;
+            text-align: left;
+            padding-bottom: 6px;
+        }
+
+        td {
+            padding: 6px 4px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .rank { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; color: var(--accent-pink); font-weight: 900; }
+        .pts { font-family: 'Orbitron', sans-serif; color: var(--accent-cyan); font-weight: 800; text-align: right; }
+
+        /* FIX SPONSOR MARQUEE TABRAKAN */
+        .sponsor-bar {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            color: var(--accent-pink);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .sponsor-label {
+            flex-shrink: 0;
+            font-weight: 900;
+            background: var(--bg-glass);
+            padding-right: 5px;
+            z-index: 2;
+        }
+
+        .sponsor-marquee-wrapper {
+            flex-grow: 1;
+            overflow: hidden;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .sponsor-list {
+            display: inline-block;
+            padding-left: 100%;
+            color: #fff;
+            font-weight: 700;
+            animation: marqueeOverlay 12s linear infinite;
+        }
+
+        @keyframes marqueeOverlay { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+    </style>
+</head>
+<body>
+
+<div class="overlay-container">
+    <div class="header-card">
+        <div>
+            <div class="event-title">🎮 GALAHAMUY</div>
+            <div class="mode-badge" id="overlayModeName">GALATAMA SURVIVAL</div>
+        </div>
+        <div class="header-right">
+            <div class="round-badge" id="overlayRoundDisplay">RONDE 1</div>
+            <div class="timer-badge" id="overlayTimerDisplay">15:00</div>
+        </div>
+    </div>
+
+    <div class="board-card">
+        <h3>🏆 TOP LEADERBOARD</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 25px;">#</th>
+                    <th>PLAYER</th>
+                    <th style="text-align: right;">PTS</th>
+                </tr>
+            </thead>
+            <tbody id="overlayLeaderboardTable"></tbody>
+        </table>
+    </div>
+
+    <div class="sponsor-bar">
+        <div class="sponsor-label">⚡ SPONSOR:</div>
+        <div class="sponsor-marquee-wrapper">
+            <div class="sponsor-list" id="overlaySponsorList"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const MODE_NAMES = {
+        'SURVIVAL': 'GALATAMA SURVIVAL',
+        'POIN': 'GALATAMA POIN',
+        'MEGALODON': 'GALATAMA MEGALODON',
+        'DARK_MEGALODON': 'DARK MEGALODON',
+        'GLACIAL_SERPENT': 'GLACIAL SERPENT',
+        'THUNDERZILLA': 'THUNDERZILLA'
+    };
+
+    function updateOverlay() {
+        const saved = localStorage.getItem('warPointTournamentData');
+        if (!saved) return;
+        
+        try {
+            const data = JSON.parse(saved);
+
+            if (data.timerDisplay) {
+                document.getElementById('overlayTimerDisplay').innerText = data.timerDisplay;
+            }
+
+            const modeKey = data.matchMode || 'SURVIVAL';
+            document.getElementById('overlayModeName').innerText = MODE_NAMES[modeKey] || modeKey;
+
+            const roundDisplay = document.getElementById('overlayRoundDisplay');
+            if (modeKey === 'SURVIVAL') {
+                roundDisplay.style.display = 'block';
+                roundDisplay.innerText = `RONDE ${data.currentRound || 1}`;
+            } else {
+                roundDisplay.style.display = 'none';
+            }
+
+            const totals = {};
+            if (data.players) {
+                Object.keys(data.players).forEach(k => totals[k] = 0);
+            }
+            if (data.history) {
+                data.history.forEach(item => {
+                    totals[item.usernameKey] = (totals[item.usernameKey] || 0) + item.points;
+                });
+            }
+
+            const leaderboard = Object.keys(totals).map(k => ({
+                displayName: data.players[k]?.displayName || k,
+                totalPoints: totals[k]
+            })).sort((a, b) => b.totalPoints - a.totalPoints).slice(0, 5);
+
+            const lbTable = document.getElementById('overlayLeaderboardTable');
+            lbTable.innerHTML = '';
+
+            if (leaderboard.length === 0) {
+                lbTable.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#7b8fa7;">Belum ada skor</td></tr>`;
+            } else {
+                leaderboard.forEach((player, idx) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="rank">${idx + 1}</td>
+                        <td>${player.displayName}</td>
+                        <td class="pts">${player.totalPoints}</td>
+                    `;
+                    lbTable.appendChild(tr);
+                });
+            }
+
+            const spList = document.getElementById('overlaySponsorList');
+            if (data.sponsors && data.sponsors.length > 0) {
+                spList.innerText = data.sponsors.join('  •  ');
+            } else {
+                spList.innerText = 'NO SPONSOR';
+            }
+
+        } catch (e) {
+            console.error("Gagal parse data overlay:", e);
+        }
+    }
+
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'warPointTournamentData') {
+            updateOverlay();
+        }
+    });
+
+    window.onload = updateOverlay;
+</script>
+
+</body>
+</html>
