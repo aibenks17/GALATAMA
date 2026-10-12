@@ -1,820 +1,1822 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GALATAMA SYSTEM BY BENG BECKMAN</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@600;700&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GALATAMA ENGINE V5.0 - SIIPA STORE EDITION</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* TEMA WARNA DINAMIS */
+    :root {
+      --bg-dark: #020105;
+      --panel-bg: rgba(10, 8, 20, 0.95);
+      --card-bg: #0d0a1d;
+      --card-border: #1e193d;
+      --purple-main: #9d4edd;
+      --purple-glow: 0 0 20px rgba(157, 78, 221, 0.6);
+      --cyan-accent: #00f5d4;
+      --cyan-glow: 0 0 15px rgba(0, 245, 212, 0.5);
+      --text-main: #ffffff;
+      --text-muted: #7976a5;
+      --danger: #f72585;
+      --success: #38b000;
+      --gold: #ffb703;
+      --silver: #e0e1dd;
+      --bronze: #cd7f32;
+    }
 
-        :root {
-            --bg-color: #050811;
-            --card-bg: rgba(18, 26, 43, 0.85);
-            --accent-cyan: #00f2fe;
-            --accent-blue: #4facfe;
-            --accent-purple: #b5179e;
-            --accent-pink: #f72585;
-            --accent-yellow: #ffb703;
-            --accent-green: #06d6a0;
-            --accent-red: #ff0054;
-            --text-main: #ffffff;
-            --text-muted: #7b8fa7;
-            --border-glow: #1e2d4a;
-        }
+    body.theme-cyan {
+      --bg-dark: #01080d;
+      --panel-bg: rgba(6, 18, 26, 0.95);
+      --card-bg: #091a24;
+      --card-border: #123b4d;
+      --purple-main: #00b4d8;
+      --purple-glow: 0 0 20px rgba(0, 180, 216, 0.6);
+      --cyan-accent: #90e0ef;
+    }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; }
+    body.theme-gold {
+      --bg-dark: #0a0701;
+      --panel-bg: rgba(22, 16, 4, 0.95);
+      --card-bg: #291d09;
+      --card-border: #4a350e;
+      --purple-main: #fb8500;
+      --purple-glow: 0 0 20px rgba(251, 133, 0, 0.6);
+      --cyan-accent: #ffb703;
+    }
 
-        body {
-            background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(181, 23, 158, 0.25) 0%, transparent 50%),
-                radial-gradient(circle at 0% 100%, rgba(0, 242, 254, 0.15) 0%, transparent 40%),
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
-            color: var(--text-main);
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
+    body.theme-emerald {
+      --bg-dark: #010a05;
+      --panel-bg: rgba(6, 26, 15, 0.95);
+      --card-bg: #092414;
+      --card-border: #124d29;
+      --purple-main: #2ec4b6;
+      --purple-glow: 0 0 20px rgba(46, 196, 182, 0.6);
+      --cyan-accent: #cbf3f0;
+    }
 
-        .container { width: 100%; max-width: 1100px; display: flex; flex-direction: column; gap: 20px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; }
+    body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: 0.3s; }
 
-        .marquee-container {
-            background: linear-gradient(90deg, rgba(247, 37, 133, 0.2), rgba(0, 242, 254, 0.2));
-            border: 1px solid var(--accent-pink);
-            border-radius: 8px;
-            padding: 6px 12px;
-            overflow: hidden;
-            white-space: nowrap;
-            box-shadow: 0 0 10px rgba(247, 37, 133, 0.3);
-        }
+    /* OVERLAY STREAM OBS MODE */
+    body.obs-mode { background: transparent !important; }
+    body.obs-mode header, body.obs-mode aside, body.obs-mode .no-obs { display: none !important; }
+    body.obs-mode main { background: transparent !important; padding: 0; }
+    body.obs-mode .obs-only { display: block !important; }
 
-        .marquee-text {
-            display: inline-block;
-            padding-left: 100%;
-            animation: marquee 18s linear infinite;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.85rem;
-            color: var(--accent-cyan);
-            letter-spacing: 1px;
-        }
+    /* RUNNING TEXT SPONSOR DI PALING ATAS */
+    .top-marquee-bar {
+      background: linear-gradient(90deg, #160c3d 0%, #24124f 50%, #160c3d 100%);
+      border-bottom: 2px solid var(--gold);
+      padding: 6px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      flex-shrink: 0;
+      box-shadow: 0 4px 15px rgba(255, 183, 3, 0.25);
+      z-index: 101;
+    }
+    .top-marquee-content {
+      display: inline-block;
+      animation: marquee 22s linear infinite;
+      font-weight: 900;
+      font-size: 11px;
+      color: #fff;
+      text-shadow: 0 0 8px rgba(255, 183, 3, 0.6);
+    }
+    @keyframes marquee {
+      0% { transform: translateX(100vw); }
+      100% { transform: translateX(-100%); }
+    }
 
-        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+    /* HEADER UTAMA */
+    header {
+      height: 60px; background: #05030a; border-bottom: 1px solid var(--card-border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 20px; flex-shrink: 0; z-index: 100;
+    }
+    .brand-group { display: flex; align-items: center; gap: 10px; }
+    .brand-title { font-size: 18px; font-weight: 900; font-style: italic; letter-spacing: -0.5px; }
+    .brand-title span { color: var(--gold); text-shadow: 0 0 10px rgba(255,183,3,0.5); }
+    .sub-brand { font-size: 9px; font-weight: 800; color: var(--gold); background: rgba(255, 183, 3, 0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255, 183, 3, 0.3); }
+    
+    .header-timer-box {
+      display: flex; align-items: center; gap: 12px; background: rgba(13, 10, 29, 0.9);
+      border: 1px solid var(--card-border); padding: 4px 14px; border-radius: 8px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+    .header-timer-display {
+      font-size: 24px; font-weight: 900; color: #fff; font-family: monospace;
+      letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 245, 212, 0.8); min-width: 80px; text-align: center;
+    }
 
-        header {
-            background: var(--card-bg);
-            padding: 20px 28px;
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid var(--accent-cyan);
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2), inset 0 0 15px rgba(0, 242, 254, 0.1);
-            backdrop-filter: blur(10px);
-            flex-wrap: wrap;
-            gap: 15px;
-        }
+    .header-info { display: flex; gap: 10px; color: var(--text-muted); font-weight: 700; align-items: center; }
 
-        .brand h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.6rem;
-            font-weight: 900;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+    /* LAYOUT UTAMA */
+    .layout-container { display: flex; flex: 1; overflow: hidden; }
 
-        .round-badge {
-            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-            color: white;
-            padding: 6px 18px;
-            border-radius: 6px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 800;
-            font-size: 1rem;
-            box-shadow: 0 0 15px rgba(247, 37, 133, 0.6);
-            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-        }
+    /* SIDEBAR */
+    aside {
+      width: 220px; background: #040208; border-right: 1px solid var(--card-border);
+      padding: 16px 12px; display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; overflow-y: auto;
+    }
+    .side-nav {
+      padding: 10px 14px; border-radius: 6px; color: var(--text-muted); font-weight: 700;
+      cursor: pointer; transition: 0.2s; border: 1px solid transparent; user-select: none;
+    }
+    .side-nav:hover { background: #120e2e; color: #fff; }
+    .side-nav.active { background: var(--purple-main); color: #fff; box-shadow: var(--purple-glow); border-color: rgba(255,255,255,0.2); }
 
-        .timer-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 8px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--accent-yellow);
-            flex-wrap: wrap;
-        }
+    /* MAIN CONTENT AREA */
+    main { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; background: var(--bg-dark); }
 
-        .timer-display {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.6rem;
-            font-weight: 900;
-            color: var(--accent-yellow);
-            text-shadow: 0 0 10px var(--accent-yellow);
-            min-width: 95px;
-            text-align: center;
-        }
+    /* STATS SUMMARY WIDGET */
+    .stats-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 100%; }
+    .stat-card {
+      background: var(--panel-bg); border: 1px solid var(--card-border); border-radius: 8px;
+      padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;
+    }
+    .stat-val { font-size: 20px; font-weight: 900; color: var(--cyan-accent); text-shadow: var(--cyan-glow); }
+    .stat-lbl { color: var(--text-muted); font-weight: 800; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .timer-input {
-            width: 50px !important;
-            padding: 6px !important;
-            font-size: 0.9rem !important;
-            text-align: center;
-            border-radius: 4px !important;
-        }
+    /* CARDS */
+    .card {
+      background: var(--panel-bg); border: 1px solid var(--card-border);
+      border-radius: 8px; padding: 14px; backdrop-filter: blur(8px); width: 100%;
+    }
+    .card-head {
+      font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
+      color: var(--cyan-accent); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
+      text-shadow: var(--cyan-glow); border-bottom: 1px dashed rgba(30, 25, 61, 0.8); padding-bottom: 8px;
+    }
 
-        .btn {
-            background: var(--border-glow);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.8rem;
-        }
+    /* AVATAR STYLES */
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--purple-main); box-shadow: 0 0 8px rgba(157, 78, 221, 0.4); }
+    .avatar-cell { display: flex; align-items: center; gap: 8px; }
 
-        .btn:hover { transform: scale(1.03); box-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
+    /* PODIUM LEADERBOARD STYLES */
+    .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 16px; margin: 10px 0 15px 0; padding: 10px; }
+    .podium-card {
+      display: flex; flex-direction: column; align-items: center; background: #0b081a;
+      border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; width: 130px; position: relative;
+    }
+    .podium-card.rank-1 { height: 175px; border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 183, 3, 0.3); transform: scale(1.05); }
+    .podium-card.rank-2 { height: 155px; border-color: var(--silver); box-shadow: 0 0 10px rgba(224, 225, 221, 0.2); }
+    .podium-card.rank-3 { height: 140px; border-color: var(--bronze); box-shadow: 0 0 10px rgba(205, 127, 50, 0.2); }
+    
+    .podium-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; margin-bottom: 6px; border: 2px solid transparent; }
+    .rank-1 .podium-avatar { border-color: var(--gold); box-shadow: 0 0 10px var(--gold); width: 56px; height: 56px; }
+    .rank-2 .podium-avatar { border-color: var(--silver); box-shadow: 0 0 8px var(--silver); }
+    .rank-3 .podium-avatar { border-color: var(--bronze); box-shadow: 0 0 8px var(--bronze); }
 
-        .btn-next {
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-            color: #000;
-            font-size: 0.9rem;
-            padding: 10px 16px;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
-            border: none;
-        }
+    .podium-badge { position: absolute; top: -10px; font-weight: 900; font-size: 10px; padding: 2px 8px; border-radius: 10px; color: #000; }
+    .rank-1 .podium-badge { background: var(--gold); }
+    .rank-2 .podium-badge { background: var(--silver); }
+    .rank-3 .podium-badge { background: var(--bronze); color: #fff; }
+    .podium-name { font-weight: 800; font-size: 10px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px; }
+    .podium-score { font-weight: 900; font-size: 14px; color: var(--cyan-accent); margin-top: 4px; }
+    .podium-prize { font-weight: 800; font-size: 9px; color: var(--gold); background: rgba(255, 183, 3, 0.1); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255, 183, 3, 0.3); margin-top: 4px; width: 90%; text-align: center; }
 
-        .btn-action-secret { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); padding: 12px; font-size: 0.9rem; }
-        .btn-action-mutasi { background: rgba(181, 23, 158, 0.2); border: 1px solid var(--accent-purple); color: #ff75c3; padding: 12px; font-size: 0.9rem; }
-        .btn-action-boss-polos { background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); color: #000; font-size: 0.95rem; padding: 12px; border: none; }
-        .btn-action-boss-mutasi { background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple)); color: #fff; font-size: 0.95rem; padding: 12px; border: none; box-shadow: 0 0 15px rgba(247, 37, 133, 0.4); }
+    /* MODE SELECTOR */
+    .mode-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    .mode-btn {
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 6px;
+      padding: 10px 4px; text-align: center; cursor: pointer; font-weight: 800; color: var(--text-muted); transition: 0.2s;
+    }
+    .mode-btn:hover { border-color: var(--purple-main); color: #fff; }
+    .mode-btn.active {
+      border-color: var(--purple-main); background: rgba(157, 78, 221, 0.25); color: #fff;
+      box-shadow: var(--purple-glow); outline: 1px solid var(--purple-main);
+    }
 
-        .btn-sponsor { background: linear-gradient(135deg, var(--accent-green), #00b4d8); color: #000; border: none; }
-        .btn-reset-sponsor { background: rgba(255, 183, 3, 0.15); color: var(--accent-yellow); border: 1px solid var(--accent-yellow); }
-        .btn-danger { background: rgba(255, 0, 84, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); }
+    /* BUTTONS */
+    .btn-row { display: flex; gap: 6px; justify-content: center; }
+    .btn {
+      padding: 8px 14px; border-radius: 6px; font-weight: 800; border: none; cursor: pointer;
+      transition: 0.15s; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+    }
+    .btn:active { transform: scale(0.96); }
+    .btn-purple { background: var(--purple-main); color: #fff; box-shadow: var(--purple-glow); }
+    .btn-green { background: var(--success); color: #fff; }
+    .btn-gold { background: var(--gold); color: #000; box-shadow: 0 0 12px rgba(255, 183, 3, 0.5); font-weight: 900; }
+    .btn-red { background: var(--danger); color: #fff; }
+    .btn-dark { background: #161233; color: var(--text-muted); border: 1px solid var(--card-border); }
+    .btn-dark:hover { color: #fff; border-color: var(--purple-main); }
+    .btn-sm { padding: 4px 8px; font-size: 9px; border-radius: 4px; }
+    .btn-orange { background: #ff9100; color: #fff; }
 
-        .mode-selector-card {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--accent-cyan);
-            border-radius: 12px;
-            padding: 16px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+    /* ROUND CHIPS SURVIVAL */
+    .round-chips { display: flex; gap: 6px; margin: 10px 0; }
+    .chip { flex: 1; padding: 8px; text-align: center; background: #0e0b24; border: 1px solid var(--card-border); border-radius: 4px; font-weight: 800; color: var(--text-muted); }
+    .chip.active { background: var(--purple-main); color: #fff; border-color: var(--cyan-accent); box-shadow: var(--purple-glow); }
 
-        .mode-title { font-family: 'Orbitron', sans-serif; color: var(--accent-cyan); font-size: 0.9rem; letter-spacing: 1px; }
+    /* LOCATION GRIDS */
+    .location-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-height: 250px; overflow-y: auto; padding-right: 4px; }
+    .loc-btn {
+      padding: 10px; background: #0e0b24; border: 1px solid var(--card-border); border-radius: 6px;
+      text-align: center; font-weight: 700; cursor: pointer; color: var(--text-muted); transition: 0.2s;
+      display: flex; flex-direction: column; gap: 3px; align-items: center;
+    }
+    .loc-btn .loc-name { font-weight: 900; font-size: 10px; }
+    .loc-btn .loc-fish { font-size: 8px; color: var(--cyan-accent); font-style: italic; }
+    .loc-btn.active { background: rgba(0, 245, 212, 0.15); border-color: var(--cyan-accent); color: #fff; box-shadow: var(--cyan-glow); }
 
-        .mode-switch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+    /* SPINWHEEL BOX */
+    .spinwheel-box {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #090518; border: 1px solid var(--purple-main); padding: 12px; border-radius: 8px; margin-bottom: 12px;
+    }
+    .spinwheel-display { font-size: 16px; font-weight: 900; color: var(--gold); text-shadow: 0 0 10px rgba(255, 183, 3, 0.5); }
+    .spinwheel-display.animating { animation: flashText 0.1s infinite alternate; }
+    @keyframes flashText { from { opacity: 0.3; transform: scale(0.98); } to { opacity: 1; transform: scale(1.02); } }
 
-        .btn-mode {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-glow);
-            color: var(--text-muted);
-            padding: 10px 12px;
-            border-radius: 6px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
+    /* CATCH GRID */
+    .catch-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .catch-card {
+      background: #110d2c; border: 1px solid var(--card-border); border-radius: 6px;
+      padding: 12px 10px; text-align: center; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; gap: 6px;
+    }
+    .catch-card:hover { border-color: var(--purple-main); box-shadow: var(--purple-glow); transform: translateY(-2px); }
 
-        .btn-mode.active {
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-            color: #000;
-            font-weight: 900;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
-            border-color: var(--accent-cyan);
-        }
+    /* TABLES & FILTER */
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; color: var(--text-muted); padding: 8px 6px; border-bottom: 1px solid var(--card-border); font-weight: 800; }
+    td { padding: 8px 6px; border-bottom: 1px solid rgba(255,255,255,0.03); font-weight: 600; vertical-align: middle; }
+    tr.selected { background: rgba(157, 78, 221, 0.35) !important; outline: 1px solid var(--purple-main); }
+    tr:hover { background: rgba(255,255,255,0.04); cursor: pointer; }
 
-        .input-card {
-            background: var(--card-bg);
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid var(--border-glow);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-        }
+    .tab-filter { display: flex; gap: 4px; background: #080614; padding: 2px; border-radius: 4px; border: 1px solid var(--card-border); }
+    .tab-item { padding: 3px 8px; border-radius: 3px; cursor: pointer; font-weight: 800; color: var(--text-muted); }
+    .tab-item.active { background: var(--purple-main); color: #fff; }
 
-        .input-card h2 { font-family: 'Orbitron', sans-serif; font-size: 1rem; margin-bottom: 15px; color: var(--accent-cyan); letter-spacing: 1px; }
+    .status-tag { padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 9px; }
+    .tag-active { background: rgba(56, 176, 0, 0.15); color: var(--success); border: 1px solid rgba(56, 176, 0, 0.3); }
+    .tag-elim { background: rgba(247, 37, 133, 0.15); color: var(--danger); border: 1px solid rgba(247, 37, 133, 0.3); }
+    .tag-present { background: rgba(0, 245, 212, 0.15); color: var(--cyan-accent); border: 1px solid rgba(0, 245, 212, 0.3); cursor: pointer; }
+    .tag-absent { background: rgba(247, 37, 133, 0.15); color: var(--danger); border: 1px solid rgba(247, 37, 133, 0.3); cursor: pointer; }
 
-        input[type="text"], input[type="number"] {
-            width: 100%;
-            background: rgba(5, 8, 17, 0.8);
-            border: 2px solid var(--border-glow);
-            color: white;
-            padding: 16px;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            outline: none;
-            transition: all 0.3s;
-        }
+    .rank-badge { width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; }
+    .rank-1-bg { background: var(--gold); color: #000; box-shadow: 0 0 8px var(--gold); }
+    .rank-2-bg { background: var(--silver); color: #000; box-shadow: 0 0 8px var(--silver); }
+    .rank-3-bg { background: var(--bronze); color: #fff; box-shadow: 0 0 8px var(--bronze); }
 
-        input[type="text"]:focus, input[type="number"]:focus { border-color: var(--accent-cyan); box-shadow: 0 0 20px rgba(0, 242, 254, 0.4); }
+    .input-group { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+    .input-field {
+      background: #110d2c; border: 1px solid var(--card-border); border-radius: 6px;
+      padding: 8px 12px; color: #fff; font-weight: 600; outline: none; flex: 1;
+    }
+    .input-field:focus { border-color: var(--purple-main); }
 
-        .action-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 15px; }
+    /* MODUL AUCTION STYLES */
+    .auction-container { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 1024px) { .auction-container { grid-template-columns: 4.5fr 7.5fr; } }
 
-        .main-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @keyframes goldPulseGlow {
+      0% { border-color: rgba(255, 183, 3, 0.4); box-shadow: 0 0 15px rgba(255, 183, 3, 0.2); }
+      50% { border-color: rgba(255, 209, 102, 0.9); box-shadow: 0 0 30px rgba(255, 183, 3, 0.6); }
+      100% { border-color: rgba(255, 183, 3, 0.4); box-shadow: 0 0 15px rgba(255, 183, 3, 0.2); }
+    }
+    .obs-auction-box {
+      background: radial-gradient(circle at 50% 30%, #181524 0%, #0b0a12 70%, #050508 100%);
+      border: 3px solid var(--gold); border-radius: 18px; padding: 20px;
+      aspect-ratio: 16/9; display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden; animation: goldPulseGlow 2.5s infinite ease-in-out;
+    }
+    .sold-modal-overlay {
+      position: absolute; inset: 0; background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(12px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 20px; text-align: center; z-index: 50; border: 4px solid var(--success);
+    }
+    .sold-modal-overlay.hidden { display: none; }
+    .auction-table-box { background: #070512; border: 1px solid var(--card-border); border-radius: 8px; max-height: 140px; overflow-y: auto; }
 
-        @media (max-width: 768px) { .main-layout { grid-template-columns: 1fr; } header { justify-content: center; } }
+    /* MODAL POPUP GENERAL */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex;
+      align-items: center; justify-content: center; z-index: 1000;
+    }
+    .modal-card {
+      background: var(--card-bg); border: 1px solid var(--purple-main); border-radius: 12px;
+      width: 450px; max-width: 90%; padding: 20px; box-shadow: var(--purple-glow);
+    }
 
-        .board-card {
-            background: var(--card-bg);
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid var(--border-glow);
-            min-height: 380px;
-            backdrop-filter: blur(10px);
-        }
+    /* WINNER ANNOUNCEMENT MODAL */
+    .winner-modal-card {
+      background: linear-gradient(135deg, #130a24 0%, #06030e 100%);
+      border: 3px solid var(--gold); border-radius: 20px;
+      width: 720px; max-width: 95%; padding: 30px; box-shadow: 0 0 40px rgba(255, 183, 3, 0.6);
+      text-align: center; position: relative; animation: popIn 0.3s ease-out;
+    }
+    @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        .board-card h2 { font-family: 'Orbitron', sans-serif; font-size: 1rem; margin-bottom: 18px; color: var(--accent-cyan); display: flex; justify-content: space-between; align-items: center; }
+    .winner-podium-grid { display: flex; justify-content: center; align-items: flex-end; gap: 20px; margin-top: 25px; }
+    .winner-box {
+      display: flex; flex-direction: column; align-items: center; background: #1a1533;
+      border: 2px solid var(--card-border); border-radius: 14px; padding: 15px; width: 190px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    }
+    .winner-box.w-rank-1 { height: 260px; border-color: var(--gold); box-shadow: 0 0 25px rgba(255, 183, 3, 0.5); transform: scale(1.08); background: #261c47; z-index: 2; }
+    .winner-box.w-rank-2 { height: 220px; border-color: var(--silver); box-shadow: 0 0 15px rgba(224, 225, 221, 0.3); }
+    .winner-box.w-rank-3 { height: 200px; border-color: var(--bronze); box-shadow: 0 0 15px rgba(205, 127, 50, 0.3); }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+    .winner-avatar { width: 68px; height: 68px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; background: #000; }
+    .w-rank-1 .winner-avatar { border: 3px solid var(--gold); width: 78px; height: 78px; box-shadow: 0 0 15px var(--gold); }
+    .w-rank-2 .winner-avatar { border: 3px solid var(--silver); box-shadow: 0 0 10px var(--silver); }
+    .w-rank-3 .winner-avatar { border: 3px solid var(--bronze); box-shadow: 0 0 10px var(--bronze); }
 
-        th { color: var(--text-muted); font-family: 'Orbitron', sans-serif; font-size: 0.75rem; text-transform: uppercase; padding: 8px 12px; }
+    .w-badge-title { font-weight: 900; font-size: 11px; padding: 3px 10px; border-radius: 99px; color: #000; margin-bottom: 6px; letter-spacing: 0.5px; }
+    .w-rank-1 .w-badge-title { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+    .w-rank-2 .w-badge-title { background: var(--silver); }
+    .w-rank-3 .w-badge-title { background: var(--bronze); color: #fff; }
 
-        td { padding: 12px; background: rgba(255, 255, 255, 0.02); border-top: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 1.1rem; font-weight: 700; }
+    .w-name { font-weight: 900; font-size: 13px; color: #ffffff; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+    .w-score { font-weight: 900; font-size: 15px; color: var(--cyan-accent); margin-top: 4px; text-shadow: 0 0 8px rgba(0, 245, 212, 0.5); }
+    .w-prize { font-weight: 800; font-size: 10px; color: #ffe6a7; background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255, 183, 3, 0.4); margin-top: 6px; width: 100%; text-align: center; word-break: break-word; }
 
-        td:first-child { border-radius: 8px 0 0 8px; border-left: 1px solid rgba(255, 255, 255, 0.05); }
-        td:last-child { border-radius: 0 8px 8px 0; border-right: 1px solid rgba(255, 255, 255, 0.05); }
+    /* OBS OVERLAY WIDGET */
+    .obs-overlay-widget {
+      display: none; background: rgba(2, 1, 5, 0.95); border: 2px solid var(--purple-main);
+      border-radius: 12px; padding: 16px; width: 360px; box-shadow: var(--purple-glow);
+    }
 
-        .badge-status { padding: 4px 12px; border-radius: 4px; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; font-weight: 800; display: inline-block; }
-        .status-waiting { background: rgba(255, 183, 3, 0.2); color: var(--accent-yellow); border: 1px solid var(--accent-yellow); }
-        .status-survive { background: rgba(6, 214, 160, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
-
-        .rank-number { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 900; color: var(--accent-pink); }
-
-        .control-panel {
-            background: var(--card-bg);
-            padding: 16px 24px;
-            border-radius: 16px;
-            border: 1px solid var(--border-glow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .delete-btn { background: none; border: none; color: var(--accent-red); cursor: pointer; font-size: 1.2rem; }
-
-        footer { background: rgba(18, 26, 43, 0.9); border: 1px solid var(--border-glow); border-radius: 16px; padding: 20px; text-align: center; }
-        .sponsor-title { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: var(--accent-pink); letter-spacing: 3px; margin-bottom: 12px; }
-        .sponsor-logos { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-        .sponsor-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 242, 254, 0.3); padding: 8px 16px; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-        .delete-sponsor-btn { background: none; border: none; color: var(--accent-red); cursor: pointer; }
-    </style>
+    .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; }
+    .file-input-wrapper input[type=file] { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+    .hidden { display: none !important; }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="marquee-container">
-        <div class="marquee-text">
-            🔥 GALAHAMUY CONTROL CENTER — SIAPKAN STRATEGI, ROD DAN BAIT TERBAIKMU ! 🔥
-        </div>
+  <!-- RUNNING TEXT SPONSOR UTAMA PALING ATAS -->
+  <div class="top-marquee-bar no-obs">
+    <div class="top-marquee-content">
+      ✨ SIIPA STORE - TOP UP ROBUX DAN GIFT IN GAME TERPERCAYA ⚡ | 👑 OFFICIAL MAIN SPONSOR GALATAMA TOURNAMENT V5 ⚡
+    </div>
+  </div>
+
+  <!-- HEADER UTAMA -->
+  <header>
+    <div class="brand-group">
+      <div class="brand-title">GALATAMA <span>ENGINE</span></div>
+      <div class="sub-brand">V5.0 SIIPA EDITION</div>
     </div>
 
-    <header>
-        <div class="brand">
-            <h1>🎮 CONTROL CENTER GALAHAMUY</h1>
-        </div>
-        
-        <div class="round-badge" id="currentRoundDisplay">RONDE 1</div>
-
-        <div class="timer-container">
-            <span>⏱️</span>
-            <div class="timer-display" id="timerDisplay">15:00</div>
-            <input type="number" id="customMinutes" class="timer-input" placeholder="Min" value="15" min="1">
-            <button class="btn" onclick="applyCustomTimer()">Set</button>
-            <button class="btn" id="startStopBtn" onclick="toggleTimer()">Start</button>
-            <button class="btn" onclick="resetTimer()">Reset</button>
-        </div>
-
-        <button class="btn btn-next" id="nextRoundBtn" onclick="nextRound()">NEXT RONDE ➔</button>
-    </header>
-
-    <div class="mode-selector-card">
-        <div class="mode-title">⚙️ PILIH MODE / TEMA EVENT:</div>
-        <div class="mode-switch-grid">
-            <button class="btn-mode" id="btn-SURVIVAL" onclick="switchMode('SURVIVAL')">🛡️ SURVIVAL</button>
-            <button class="btn-mode" id="btn-POIN" onclick="switchMode('POIN')">🎯 GALATAMA POIN</button>
-            <button class="btn-mode" id="btn-MEGALODON" onclick="switchMode('MEGALODON')">🦈 MEGALODON</button>
-            <button class="btn-mode" id="btn-DARK_MEGALODON" onclick="switchMode('DARK_MEGALODON')">🌑 DARK MEGALODON</button>
-            <button class="btn-mode" id="btn-GLACIAL_SERPENT" onclick="switchMode('GLACIAL_SERPENT')">❄️ GLACIAL SERPENT</button>
-            <button class="btn-mode" id="btn-THUNDERZILLA" onclick="switchMode('THUNDERZILLA')">⚡ THUNDERZILLA</button>
-        </div>
+    <!-- PENGUBAH TEMA WARNA -->
+    <div class="btn-row" style="background:rgba(0,0,0,0.3); padding:4px 8px; border-radius:8px; border:1px solid var(--card-border);">
+      <button class="btn btn-sm btn-dark" style="background:#0d0a1d; color:#fff;" onclick="App.setTheme('')" title="Dark Purple">🌌 Dark</button>
+      <button class="btn btn-sm btn-dark" style="background:#00b4d8; color:#fff;" onclick="App.setTheme('theme-cyan')" title="Neon Cyan">⚡ Cyan</button>
+      <button class="btn btn-sm btn-dark" style="background:#fb8500; color:#000;" onclick="App.setTheme('theme-gold')" title="Sunset Gold">🔥 Gold</button>
+      <button class="btn btn-sm btn-dark" style="background:#2ec4b6; color:#000;" onclick="App.setTheme('theme-emerald')" title="Emerald Cyber">🌿 Emerald</button>
     </div>
 
-    <div class="input-card">
-        <h2>INPUT HASIL PESERTA (<span id="inputModeDisplay" style="color: var(--accent-pink);">GALATAMA SURVIVAL</span>)</h2>
-        <input type="text" id="inputUsername" placeholder="MASUKKAN USERNAME (@asep)" autocomplete="off">
-        
-        <div class="action-buttons" id="actionButtonsContainer"></div>
+    <div class="header-timer-box">
+      <span style="font-weight: 800; color: var(--text-muted);">TIMER:</span>
+      <div class="header-timer-display" id="timerClock">15:00</div>
+      <div class="btn-row">
+        <button class="btn btn-green btn-sm" onclick="App.confirmStartTimer()">START</button>
+        <button class="btn btn-red btn-sm" onclick="App.pauseTimer()">PAUSE</button>
+        <button class="btn btn-dark btn-sm" onclick="App.resetTimer()">RESET</button>
+        <button class="btn btn-dark btn-sm" onclick="App.setCustomTime()">SET</button>
+      </div>
     </div>
 
-    <div class="main-layout">
-        <div class="board-card">
-            <h2>
-                <span id="leftBoardTitle">HASIL RONDE AKTIF</span>
-                <span id="activeRoundSub" style="font-size: 0.85rem; color: var(--accent-pink);">RONDE 1</span>
-            </h2>
-            <table>
-                <thead>
-                    <tr id="tableHeaderRow"></tr>
-                </thead>
-                <tbody id="activeRoundTable"></tbody>
-            </table>
-        </div>
+    <div class="header-info">
+      <button class="btn btn-gold" onclick="App.announceWinners()">🏆 UMUMKAN PEMENANG</button>
+      <button class="btn btn-purple btn-sm" onclick="App.toggleOBSMode()">📺 OBS OVERLAY</button>
+    </div>
+  </header>
 
-        <div class="board-card">
-            <h2>🏆 TOTAL SCOREBOARD</h2>
-            <table>
-                <thead>
+  <div class="layout-container">
+    <!-- SIDEBAR NAVIGASI -->
+    <aside>
+      <div class="side-nav active" onclick="App.switchView('dashboard', this)">Dashboard</div>
+      <div class="side-nav" onclick="App.switchView('mode-timer', this)">Mode & Round</div>
+      <div class="side-nav" onclick="App.switchView('peserta', this)">Peserta & Absensi</div>
+      <div class="side-nav" onclick="App.switchView('tangkapan', this)">Hasil Tangkapan</div>
+      <div class="side-nav" onclick="App.switchView('leaderboard', this)">Leaderboard & Podium</div>
+      <div class="side-nav" onclick="App.switchView('hadiah-sponsor', this)">Hadiah & Sponsor</div>
+      <div class="side-nav" onclick="App.switchView('auction', this)" style="color:var(--gold); font-weight:900;">🎰 Live Auction (Siipa Store)</div>
+      <div class="side-nav" onclick="App.switchView('log', this)">Log / Riwayat & Undo</div>
+      <div class="side-nav" onclick="App.switchView('pengaturan', this)">Backup & Export</div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+      <!-- OBS LIVE OVERLAY HUD -->
+      <div class="obs-only obs-overlay-widget card" id="obsWidget">
+        <div class="card-head">
+          <span>LIVE LEADERBOARD</span>
+          <span id="obsTimer" style="color:var(--cyan-accent); font-family:monospace;">15:00</span>
+        </div>
+        <table id="obsTable">
+          <thead><tr><th>#</th><th>Peserta</th><th>Poin</th></tr></thead>
+          <tbody id="obsTbody"></tbody>
+        </table>
+        <button class="btn btn-red btn-sm" style="margin-top:10px; width:100%;" onclick="App.toggleOBSMode()">EXIT OBS MODE</button>
+      </div>
+
+      <!-- STATS BAR SUMMARY -->
+      <div class="stats-bar view-section view-dashboard no-obs">
+        <div class="stat-card">
+          <div class="stat-val" id="statTotalPeserta">0</div>
+          <div class="stat-lbl">Total Peserta</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="statHadirPeserta" style="color:var(--cyan-accent);">0</div>
+          <div class="stat-lbl">Peserta Hadir</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="statActivePeserta" style="color:var(--success);">0</div>
+          <div class="stat-lbl">Peserta Aktif</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="statTotalCatch" style="color:var(--purple-main);">0</div>
+          <div class="stat-lbl">Total Tangkapan</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="statTopScore" style="color:var(--gold);">0</div>
+          <div class="stat-lbl">Poin Tertinggi</div>
+        </div>
+      </div>
+
+      <!-- SEKSI: PODIUM JUARA TOP 3 -->
+      <div class="card view-section view-dashboard view-leaderboard no-obs">
+        <div class="card-head">🏆 PODIUM KLASEMEN SEMENTARA & HADIAH</div>
+        <div class="podium-container" id="podiumContainer"></div>
+      </div>
+
+      <!-- SEKSI: MODE PERTANDINGAN -->
+      <div class="card view-section view-dashboard view-mode-timer no-obs">
+        <div class="card-head">MODE PERTANDINGAN</div>
+        <div class="mode-grid">
+          <div class="mode-btn" id="m-SURVIVAL" onclick="App.changeMode('SURVIVAL')">SURVIVAL</div>
+          <div class="mode-btn" id="m-MEGALODON" onclick="App.changeMode('MEGALODON')">MEGALODON</div>
+          <div class="mode-btn" id="m-GLACIAL_SERPENT" onclick="App.changeMode('GLACIAL_SERPENT')">GLACIAL SERPENT</div>
+          <div class="mode-btn" id="m-DARK_MEGALODON" onclick="App.changeMode('DARK_MEGALODON')">DARK MEGALODON</div>
+          <div class="mode-btn" id="m-POINT_RUSH" onclick="App.changeMode('POINT_RUSH')">POINT RUSH</div>
+        </div>
+      </div>
+
+      <!-- SEKSI: POINT RUSH CONTROL & SPINWHEEL -->
+      <div class="card hidden view-section view-dashboard view-mode-timer no-obs" id="pointRushCard">
+        <div class="card-head">POINT RUSH — SPINWHEEL ACAK TEMPAT (30 LOKASI)</div>
+        <div class="spinwheel-box">
+          <div>
+            <div style="color:var(--text-muted); font-weight:800; font-size:9px;">LOKASI AKTIF HASIL SPINWHEEL:</div>
+            <div class="spinwheel-display" id="spinwheelDisplay">FISHERMAN ISLAND</div>
+          </div>
+          <button class="btn btn-gold" onclick="App.spinWheel()">🎰 PUTAR SPINWHEEL</button>
+        </div>
+        <div class="location-grid" id="pointRushLocationGrid"></div>
+      </div>
+
+      <!-- SEKSI: SURVIVAL CONTROL -->
+      <div class="card hidden view-section view-dashboard view-mode-timer no-obs" id="survivalCard">
+        <div class="card-head">SURVIVAL CONTROL</div>
+        <div style="font-weight: 800; color:var(--text-muted);">ROUND: <b id="roundText" style="color:var(--cyan-accent);">1 / 5</b></div>
+        <div class="round-chips" id="roundChips"></div>
+        <button class="btn btn-purple" style="width: 100%; margin-top: 4px;" onclick="App.nextRound()">NEXT ROUND (ELIMINASI OTOMATIS)</button>
+      </div>
+
+      <!-- SEKSI: HASIL TANGKAPAN -->
+      <div class="card view-section view-dashboard view-tangkapan no-obs">
+        <div class="card-head">
+          <span>INPUT HASIL TANGKAPAN</span>
+          <span id="selectedLabel" style="color:var(--cyan-accent); font-size:10px; font-weight:800;">PILIH PESERTA DI TABEL DAHULU</span>
+        </div>
+        <div class="catch-grid" id="catchGrid"></div>
+      </div>
+
+      <!-- SEKSI: LIVE AUCTION ENGINE (SIIPA STORE) -->
+      <div class="card view-section view-auction no-obs hidden">
+        <div class="card-head" style="color: var(--gold);">🎰 SIIPA STORE - LIVE AUCTION ENGINE (LEDGER & OBS OVERLAY)</div>
+        <div class="auction-container">
+          
+          <div style="background:#070512; border:1px solid rgba(255,183,3,0.3); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:10px;">
+            <div style="font-size: 0.8rem; font-weight: 900; color: var(--gold); border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">🎛️ PANEL KONTROL LELANG SIIPA</div>
+            
+            <div style="display:flex; flex-direction:column; gap:3px;">
+              <label style="font-size:0.65rem; color:var(--text-muted); font-weight:800;">Nama Barang Lelang</label>
+              <input type="text" id="aucItemName" class="input-field" value="Ikan Secret Shiny Mutasi King" style="color:var(--gold); font-weight:800;">
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+              <div>
+                <label style="font-size:0.65rem; color:var(--text-muted);">Open Bid (OB)</label>
+                <input type="number" id="aucOpenBid" class="input-field" value="50000">
+              </div>
+              <div>
+                <label style="font-size:0.65rem; color:var(--text-muted);">Next Step</label>
+                <input type="number" id="aucNextBid" class="input-field" value="10000">
+              </div>
+              <div>
+                <label style="font-size:0.65rem; color:var(--text-muted);">BIN / Tebus</label>
+                <input type="number" id="aucBin" class="input-field" value="250000">
+              </div>
+            </div>
+
+            <div style="display:flex; gap:6px;">
+              <div style="flex:1;">
+                <label style="font-size:0.65rem; color:var(--text-muted);">Durasi Timer (Menit)</label>
+                <input type="number" id="aucTimerMins" class="input-field" value="2" step="0.5">
+              </div>
+              <div style="display:flex; align-items:flex-end;">
+                <button class="btn btn-dark btn-sm" onclick="AuctionApp.setTimer()">⏱️ Set</button>
+              </div>
+            </div>
+
+            <button class="btn btn-gold" onclick="AuctionApp.applyItem()">🚀 GANTI ITEM & MULAI LELANG</button>
+
+            <div style="background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.06); padding:8px; border-radius:8px; display:flex; flex-direction:column; gap:6px;">
+              <label style="font-size:0.65rem; color:var(--cyan-accent); font-weight:800;">💬 FAST PARSER CHAT (Ketik 'bin', '50k', dll)</label>
+              <div style="display:grid; grid-template-columns: 1fr 1.5fr; gap:4px;">
+                <input type="text" id="aucSimUser" class="input-field" value="Raka_Sultan" placeholder="Username">
+                <input type="text" id="aucSimMsg" class="input-field" placeholder="Ketik pesan..." onkeypress="if(event.key==='Enter') AuctionApp.parseChat()">
+              </div>
+              <button class="btn btn-purple btn-sm" onclick="AuctionApp.parseChat()">⚡ PROSES CHAT</button>
+            </div>
+
+            <div style="background:rgba(0,0,0,0.4); border:1px solid rgba(56,176,0,0.3); padding:8px; border-radius:8px; display:flex; flex-direction:column; gap:6px;">
+              <label style="font-size:0.65rem; color:var(--success); font-weight:800;">🏆 MANUAL COMMIT PEMENANG (SOLD)</label>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:4px;">
+                <input type="text" id="aucManWinner" class="input-field" placeholder="Nama Pemenang">
+                <input type="number" id="aucManAmount" class="input-field" placeholder="Nominal Rp">
+              </div>
+              <button class="btn btn-green btn-sm" onclick="AuctionApp.commitManual()">✅ SAHKAN & REKAP</button>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+              <button class="btn btn-green btn-sm" onclick="AuctionApp.startTimer()">▶ Start</button>
+              <button class="btn btn-orange btn-sm" onclick="AuctionApp.pauseTimer()">⏸ Pause</button>
+              <button class="btn btn-red btn-sm" onclick="AuctionApp.soldCurrent()">🛑 SOLD</button>
+            </div>
+            <button class="btn btn-dark btn-sm" onclick="AuctionApp.resetRound()">🔄 RESET ROUND</button>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="font-size: 0.7rem; font-weight: 800; color: var(--text-muted);">📺 OBS OVERLAY PREVIEW (SIIPA STORE)</div>
+            
+            <div class="obs-auction-box">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="background:rgba(255,183,3,0.2); border:1px solid var(--gold); color:var(--gold); padding:3px 10px; border-radius:99px; font-size:0.65rem; font-weight:900;">🔥 SIIPA STORE OFFICIAL</span>
+                <span id="aucTimerDisplay" style="background:rgba(247,37,133,0.2); border:1px solid var(--danger); color:#ff6b9d; padding:3px 10px; border-radius:99px; font-family:monospace; font-weight:900;">⏱ 02:00</span>
+              </div>
+
+              <div>
+                <div style="font-size:0.6rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Sedang Dilelang:</div>
+                <div id="aucObsItem" style="font-size:1.4rem; font-weight:900; color:var(--gold); text-shadow:0 2px 4px rgba(0,0,0,0.5);">Ikan Secret Shiny Mutasi King</div>
+                <div style="display:flex; gap:12px; font-size:0.7rem; font-weight:700; color:#cbd5e1; margin-top:3px;">
+                  <span>OB: <b id="aucObsOB" style="color:#fff;">Rp 50.000</b></span>
+                  <span>Next: <b id="aucObsNext" style="color:var(--cyan-accent);">+Rp 10.000</b></span>
+                  <span>BIN: <b id="aucObsBin" style="color:#f72585;">Rp 250.000</b></span>
+                </div>
+              </div>
+
+              <div style="background:linear-gradient(135deg, rgba(56,176,0,0.2), rgba(4,120,87,0.3)); border:2px solid var(--success); border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-size:0.55rem; color:var(--success); font-weight:800; text-transform:uppercase;">Highest Bidder / Pemenang</div>
+                  <div id="aucObsWinner" style="font-size:1.1rem; font-weight:900; color:var(--success);">- Belum Ada Penawar -</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:0.55rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Nominal</div>
+                  <div id="aucObsAmount" style="font-size:1.3rem; font-weight:900; color:var(--gold);">Rp 0</div>
+                </div>
+              </div>
+
+              <div id="aucSoldModal" class="sold-modal-overlay hidden">
+                <span id="aucSoldTag" style="background:rgba(255,183,3,0.2); border:1px solid var(--gold); color:var(--gold); padding:3px 12px; border-radius:99px; font-size:0.7rem; font-weight:900;">🎉 ITEM SOLD / TERJUAL</span>
+                <div id="aucSoldItem" style="font-size:1.3rem; font-weight:900; color:var(--gold); margin-top:6px;">Nama Barang</div>
+                <div id="aucSoldWinner" style="font-size:1.8rem; font-weight:900; color:var(--success); margin:2px 0;">@Username</div>
+                <div id="aucSoldAmount" style="font-size:1.5rem; font-weight:900; color:var(--cyan-accent);">Rp 0</div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:0.65rem; font-weight:800; color:var(--text-muted); margin-bottom:3px;">
+                <span>📋 REKAP PEMENANG LELANG SIIPA STORE</span>
+                <span id="aucCount" style="color:var(--gold);">0 Item</span>
+              </div>
+              <div class="auction-table-box">
+                <table>
+                  <thead>
                     <tr>
-                        <th style="width: 40px;">#</th>
-                        <th>Username</th>
-                        <th>Total Point</th>
+                      <th>No</th>
+                      <th>Barang</th>
+                      <th>Pemenang</th>
+                      <th style="text-align:right;">Harga</th>
+                      <th style="text-align:center;">Lunas?</th>
+                      <th style="text-align:center;">Edit</th>
                     </tr>
-                </thead>
-                <tbody id="totalScoreTable"></tbody>
-            </table>
+                  </thead>
+                  <tbody id="aucTableBody">
+                    <tr><td colspan="6" style="text-align:center; color:#64748b; font-style:italic; padding:8px;">Belum ada rekap barang terjual.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
         </div>
-    </div>
+      </div>
 
-    <div class="control-panel">
-        <div>
-            <button class="btn" onclick="exportData()">💾 Export JSON</button>
-            <button class="btn" onclick="document.getElementById('importFile').click()">📂 Import JSON</button>
-            <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(event)">
-            <button class="btn btn-sponsor" onclick="addSponsor()">➕ Tambah Sponsor</button>
-            <button class="btn btn-reset-sponsor" onclick="resetSponsorsOnly()">🗑️ Reset Sponsor</button>
+      <!-- SEKSI: MANAJEMEN HADIAH & SPONSOR -->
+      <div class="card view-section view-hadiah-sponsor no-obs hidden">
+        <div class="card-head">🎁 KUSTOMISASI HADIAH JUARA</div>
+        <div class="input-group" style="flex-direction:column; align-items:stretch; gap:10px;">
+          <div style="display:flex; gap:10px; align-items:center;">
+            <span style="width:100px; font-weight:800; color:var(--gold);">🥇 JUARA 1:</span>
+            <input type="text" id="prizeRank1" class="input-field" placeholder="Contoh: Rp 5.000.000 + Trophy" onchange="App.savePrizes()">
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <span style="width:100px; font-weight:800; color:var(--silver);">🥈 JUARA 2:</span>
+            <input type="text" id="prizeRank2" class="input-field" placeholder="Contoh: Rp 2.500.000 + Medali" onchange="App.savePrizes()">
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <span style="width:100px; font-weight:800; color:var(--bronze);">🥉 JUARA 3:</span>
+            <input type="text" id="prizeRank3" class="input-field" placeholder="Contoh: Rp 1.000.000 + Sertifikat" onchange="App.savePrizes()">
+          </div>
         </div>
-        <button class="btn btn-danger" onclick="resetMatchDataOnly()">⚠️ Reset Poin & Match Data</button>
+      </div>
+
+      <div class="card view-section view-hadiah-sponsor no-obs hidden">
+        <div class="card-head">🤝 KUSTOMISASI MANAJEMEN SPONSOR</div>
+        <div class="input-group">
+          <input type="text" id="sponsorName" class="input-field" placeholder="Nama Sponsor...">
+          <input type="text" id="sponsorLogoUrl" class="input-field" placeholder="URL Logo Sponsor...">
+          <div class="file-input-wrapper">
+            <button class="btn btn-dark" id="btnSponsorLogoLabel">📁 LOGO LOKAL</button>
+            <input type="file" id="sponsorLogoFile" accept="image/*" onchange="App.handleSponsorLogoSelect(event)">
+          </div>
+          <button class="btn btn-purple" onclick="App.addSponsor()">TAMBAH SPONSOR</button>
+        </div>
+        <table style="margin-top:15px;">
+          <thead><tr><th>Logo</th><th>Nama Sponsor</th><th style="text-align:center;">Aksi</th></tr></thead>
+          <tbody id="sponsorTbody"></tbody>
+        </table>
+      </div>
+
+      <!-- SEKSI: TABEL PESERTA, BULK IMPORT & ABSENSI -->
+      <div class="card view-section view-dashboard view-peserta no-obs hidden">
+        <div class="card-head">
+          <span>MANAJEMEN PESERTA, BULK IMPORT (COPAS) & ABSENSI</span>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <button class="btn btn-green btn-sm" onclick="App.markAllAttendance(true)">✅ ABSENKAN SEMUA</button>
+            <input type="text" id="searchPeserta" class="input-field" placeholder="Cari Nama..." style="padding:4px 8px; width:120px;" oninput="App.renderPeserta()">
+            <div class="tab-filter">
+              <div class="tab-item active" onclick="App.filterPeserta(this, 'ALL')">SEMUA</div>
+              <div class="tab-item" onclick="App.filterPeserta(this, 'FIXED')">FIXED</div>
+              <div class="tab-item" onclick="App.filterPeserta(this, 'RANDOM')">RANDOM</div>
+            </div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Peserta</th>
+              <th>Tipe</th>
+              <th>Absen</th>
+              <th>Status</th>
+              <th>Poin</th>
+              <th style="text-align: center;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="pesertaTbody"></tbody>
+        </table>
+        
+        <!-- INPUT SATUAN -->
+        <div class="input-group" style="flex-wrap: wrap;">
+          <input type="text" id="newPesertaName" class="input-field" placeholder="Nama Peserta Baru..." style="min-width: 150px;">
+          
+          <div class="file-input-wrapper">
+            <button class="btn btn-dark" id="btnLocalAvatarLabel">📁 UPLOAD GAMBAR LOKAL</button>
+            <input type="file" id="newPesertaAvatarFile" accept="image/*" onchange="App.handleFileSelect(event)">
+          </div>
+
+          <span style="color:var(--text-muted);">atau</span>
+          <input type="text" id="newPesertaAvatarUrl" class="input-field" placeholder="URL Foto Gambar..." style="min-width: 150px;">
+          
+          <select id="newPesertaType" class="input-field" style="max-width: 100px;">
+            <option value="FIXED">FIXED</option>
+            <option value="RANDOM">RANDOM</option>
+          </select>
+          <button class="btn btn-purple" onclick="App.addPeserta()">TAMBAH PESERTA</button>
+        </div>
+
+        <!-- BULK IMPORT COPAS KOTAK -->
+        <div style="margin-top: 14px; background: rgba(0,0,0,0.3); border: 1px dashed var(--card-border); padding: 10px; border-radius: 8px;">
+          <label style="font-size: 0.65rem; color: var(--gold); font-weight: 800; display: block; margin-bottom: 4px;">📋 BULK IMPORT (COPAS BANYAK SEKALIGUS - 1 NAMA PER BARIS):</label>
+          <textarea id="bulkPesertaText" class="input-field" rows="3" placeholder="Contoh:&#10;Budi_Gamer&#10;Raka_Sultan&#10;AndiPro" style="width: 100%; resize: vertical;"></textarea>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+            <span style="font-size: 9px; color: var(--text-muted);">*Otomatis terdaftar sebagai Tipe FIXED dan langsung hadir.</span>
+            <button class="btn btn-gold btn-sm" onclick="App.bulkImportPeserta()">⚡ IMPORT MASSAL SEKARANG</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SEKSI: TABEL LEADERBOARD -->
+      <div class="card view-section view-dashboard view-leaderboard no-obs hidden">
+        <div class="card-head">LEADERBOARD PERTANDINGAN</div>
+        <table>
+          <thead>
+            <tr><th>Rank</th><th>Peserta</th><th>Total Poin</th><th>Status</th><th>Detail & Override</th></tr>
+          </thead>
+          <tbody id="leaderboardTbody"></tbody>
+        </table>
+      </div>
+
+      <!-- SEKSI: LOG / RIWAYAT & CORRECTION -->
+      <div class="card view-section view-dashboard view-log no-obs hidden">
+        <div class="card-head">
+          <span>LOG / RIWAYAT TANGKAPAN & BATALKAN (UNDO)</span>
+          <span style="color:var(--danger); font-size:9px;">*Hapus log untuk rollback poin yang salah input</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Waktu</th><th>Peserta</th><th>Mode / Detail</th><th>Hasil</th><th>Poin</th><th style="text-align:center;">Batal/Hapus</th></tr>
+          </thead>
+          <tbody id="historyTbody"></tbody>
+        </table>
+      </div>
+
+      <!-- SEKSI: BACKUP & EXPORT -->
+      <div class="card view-section view-pengaturan no-obs hidden">
+        <div class="card-head">BACKUP, RESTORE & EXPORT DATA</div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn-purple" onclick="App.exportCSV()">📥 EXPORT KE CSV (EXCEL)</button>
+            <button class="btn btn-dark" onclick="App.exportJSON()">💾 BACKUP DATA (JSON)</button>
+            <button class="btn btn-dark" onclick="document.getElementById('importFile').click()">📤 IMPORT BACKUP DATA</button>
+            <input type="file" id="importFile" class="hidden" accept=".json" onchange="App.importJSON(event)">
+          </div>
+          <hr style="border-color:var(--card-border);">
+          <div>
+            <button class="btn btn-red" onclick="App.resetAllData()">⚠️ RESET SELURUH DATA TOURNAMENT</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MODAL KONFIRMASI START TIMER & ABSENSI -->
+  <div class="modal-overlay hidden" id="startConfirmModal">
+    <div class="modal-card" style="width: 500px; text-align: center; border-color: var(--gold); box-shadow: 0 0 25px rgba(255, 183, 3, 0.4);">
+      <div class="card-head" style="justify-content: center; color: var(--gold); font-size: 13px;">
+        ⚠️ KONFIRMASI START PERTANDINGAN
+      </div>
+      <p style="color: var(--text-main); font-size: 12px; margin: 15px 0; font-weight: 700;">
+        Make sure semua peserta sudah hadir sebelum timer dimulai! Silakan pilih tindakan di bawah ini:
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+        <button class="btn btn-green" style="padding: 12px; font-size: 12px;" onclick="App.startTimerAction(true)">✅ Absenkan Semua & Mulai</button>
+        <button class="btn btn-orange" style="padding: 12px; font-size: 12px;" onclick="App.startTimerAction(false)">⚡ Mulai Tanpa Absen</button>
+        <button class="btn btn-dark" style="padding: 12px; font-size: 12px; color: #fff;" onclick="App.closeModal('startConfirmModal'); App.switchView('peserta', document.querySelectorAll('.side-nav')[2]);">🔍 Cek Lagi Absensi Peserta</button>
+      </div>
     </div>
+  </div>
 
-    <footer>
-        <div class="sponsor-title">OFFICIAL SPONSORS & PARTNERS</div>
-        <div class="sponsor-logos" id="sponsorContainer"></div>
-    </footer>
-</div>
+  <!-- MODAL DETAIL & KOREKSI POIN PESERTA -->
+  <div class="modal-overlay hidden" id="playerModal">
+    <div class="modal-card">
+      <div class="card-head">
+        <span id="modalPlayerName">DETAIL PESERTA</span>
+        <button class="btn btn-red btn-sm" onclick="App.closeModal('playerModal')">X</button>
+      </div>
+      <div id="modalPlayerStats" style="display:flex; flex-direction:column; gap:8px;"></div>
+    </div>
+  </div>
 
-<script>
-    const MODE_CONFIGS = {
-        'SURVIVAL': {
-            name: 'GALATAMA SURVIVAL',
-            isRoundsMode: true,
-            hasStatusCol: true,
-            actions: [
-                { label: '★ SECRET (+1 PTS)', type: 'SECRET', pts: 1, class: 'btn-action-secret' },
-                { label: '◆ MITOS (SURVIVE)', type: 'MITOS', pts: 0, class: 'btn-action-boss-polos' }
-            ]
-        },
-        'POIN': {
-            name: 'GALATAMA POIN',
-            isRoundsMode: false,
-            hasStatusCol: false,
-            actions: [
-                { label: '★ SECRET (+1 PTS)', type: 'SECRET', pts: 1, class: 'btn-action-secret' },
-                { label: '🧬 SECRET MUTASI (+2 PTS)', type: 'SECRET_MUTASI', pts: 2, class: 'btn-action-mutasi' }
-            ]
-        },
-        'MEGALODON': {
-            name: 'GALATAMA MEGALODON',
-            isRoundsMode: false,
-            hasStatusCol: false,
-            actions: [
-                { label: '★ SECRET (+1 PTS)', type: 'SECRET', pts: 1, class: 'btn-action-secret' },
-                { label: '🧬 SECRET MUTASI (+2 PTS)', type: 'SECRET_MUTASI', pts: 2, class: 'btn-action-mutasi' },
-                { label: '🦈 MEGALODON POLOS (+4 PTS)', type: 'MEGALODON_POLOS', pts: 4, class: 'btn-action-boss-polos' },
-                { label: '🧬 MEGALODON MUTASI (+5 PTS)', type: 'MEGALODON_MUTASI', pts: 5, class: 'btn-action-boss-mutasi' }
-            ]
-        },
-        'DARK_MEGALODON': {
-            name: 'DARK MEGALODON',
-            isRoundsMode: false,
-            hasStatusCol: false,
-            actions: [
-                { label: '★ SECRET (+1 PTS)', type: 'SECRET', pts: 1, class: 'btn-action-secret' },
-                { label: '🧬 SECRET MUTASI (+2 PTS)', type: 'SECRET_MUTASI', pts: 2, class: 'btn-action-mutasi' },
-                { label: '🌑 DARK MEGALODON POLOS (+4 PTS)', type: 'DARK_MEGALODON_POLOS', pts: 4, class: 'btn-action-boss-polos' },
-                { label: '🧬 DARK MEGALODON MUTASI (+5 PTS)', type: 'DARK_MEGALODON_MUTASI', pts: 5, class: 'btn-action-boss-mutasi' }
-            ]
-        },
-        'GLACIAL_SERPENT': {
-            name: 'GLACIAL SERPENT',
-            isRoundsMode: false,
-            hasStatusCol: false,
-            actions: [
-                { label: '★ SECRET (+1 PTS)', type: 'SECRET', pts: 1, class: 'btn-action-secret' },
-                { label: '🧬 SECRET MUTASI (+2 PTS)', type: 'SECRET_MUTASI', pts: 2, class: 'btn-action-mutasi' },
-                { label: '❄️ GLACIAL SERPENT POLOS (+4 PTS)', type: 'GLACIAL_SERPENT_POLOS', pts: 4, class: 'btn-action-boss-polos' },
-                { label: '🧬 GLACIAL SERPENT MUTASI (+5 PTS)', type: 'GLACIAL_SERPENT_MUTASI', pts: 5, class: 'btn-action-boss-mutasi' }
-            ]
-        },
-        'THUNDERZILLA': {
-            name: 'THUNDERZILLA',
-            isRoundsMode: false,
-            hasStatusCol: false,
-            actions: [
-                { label: '★ SECRET (+1 PTS)', type: 'SECRET', pts: 1, class: 'btn-action-secret' },
-                { label: '🧬 SECRET MUTASI (+2 PTS)', type: 'SECRET_MUTASI', pts: 2, class: 'btn-action-mutasi' },
-                { label: '⚡ THUNDERZILLA (+10 PTS)', type: 'THUNDERZILLA', pts: 10, class: 'btn-action-boss-mutasi' }
-            ]
-        }
+  <!-- MODAL SELEBRASI UMUMKAN PEMENANG DENGAN SIIPA STORE & HIGH VISIBILITY -->
+  <div class="modal-overlay hidden" id="winnerModal">
+    <div class="winner-modal-card">
+      <div style="display: inline-block; background: rgba(255,183,3,0.15); border: 2px solid var(--gold); color: var(--gold); padding: 5px 16px; border-radius: 99px; font-weight: 900; font-size: 11px; margin-bottom: 8px; box-shadow: 0 0 12px rgba(255,183,3,0.4);">
+        👑 SPONSOR UTAMA: SIIPA STORE (TOP UP & GIFT IN GAME TERPERCAYA) 👑
+      </div>
+      <h1 style="font-size: 24px; font-weight: 900; color: #ffffff; text-shadow: 0 0 15px rgba(255,255,255,0.6); margin-top: 4px;">GRAND CHAMPIONS TOURNAMENT</h1>
+      <p style="color: #cbd5e1; font-size: 11px; margin-top: 2px; font-weight: 700;">Berikut adalah daftar resmi para juara Galatama Engine V5.0</p>
+      
+      <div class="winner-podium-grid" id="winnerPodiumGrid"></div>
+
+      <button class="btn btn-gold" style="margin-top: 25px; width: 100%; padding: 12px; font-size: 12px;" onclick="App.closeModal('winnerModal')">TUTUP SELEBRASI</button>
+    </div>
+  </div>
+
+  <!-- HIDDEN INPUT UNTUK GANTI AVATAR -->
+  <input type="file" id="changeAvatarFileInput" class="hidden" accept="image/*" onchange="App.handleAvatarChangeFile(event)">
+
+  <script>
+    const DEFAULT_AVATAR = 'https://api.dicebear.com/7.x/bottts/svg?seed=';
+
+    const AudioEngine = {
+      ctx: null,
+      init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+      playPop() {
+        this.init();
+        const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+        osc.type = 'sine'; osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, this.ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.3, this.ctx.currentTime); gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.08);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(); osc.stop(this.ctx.currentTime + 0.08);
+      },
+      playAlert() {
+        this.init();
+        const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+        osc.type = 'triangle'; osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+        osc.frequency.setValueAtTime(800, this.ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.4, this.ctx.currentTime); gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.25);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(); osc.stop(this.ctx.currentTime + 0.25);
+      },
+      playBuzzer() {
+        this.init();
+        const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+        osc.frequency.setValueAtTime(100, this.ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.6, this.ctx.currentTime); gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.9);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(); osc.stop(this.ctx.currentTime + 0.9);
+      },
+      playFanfare() {
+        this.init();
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+          osc.type = 'triangle'; osc.frequency.setValueAtTime(freq, this.ctx.currentTime + (idx * 0.12));
+          gain.gain.setValueAtTime(0.4, this.ctx.currentTime + (idx * 0.12));
+          gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + (idx * 0.12) + 0.4);
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.start(this.ctx.currentTime + (idx * 0.12));
+          osc.stop(this.ctx.currentTime + (idx * 0.12) + 0.4);
+        });
+      }
     };
 
-    let appData = {
-        currentRound: 1,
-        matchMode: 'SURVIVAL',
-        players: {}, 
-        history: [],
-        sponsors: ["SPONSOR 1", "SPONSOR 2"],
-        timerDisplay: '15:00',
-        timeLeft: 900
-    };
+    const App = {
+      tempBase64Avatar: null,
+      tempBase64Sponsor: null,
+      editingParticipantId: null,
+      isSpinning: false,
+      state: {
+        activeView: 'dashboard', mode: 'SURVIVAL', obsMode: false, currentTheme: '',
+        timer: { isRunning: false, durationMinutes: 15, secondsLeft: 900, intervalId: null },
+        survival: { round: 1 }, pointRushLocation: 'FISHERMAN ISLAND', selectedId: null, currentFilter: 'ALL',
+        prizes: { rank1: 'Rp 5.000.000 + Trophy', rank2: 'Rp 2.500.000 + Medali', rank3: 'Rp 1.000.000 + Sertifikat' },
+        sponsors: [
+          { id: 'sp_siipa', name: 'SIIPA STORE (MAIN SPONSOR)', logo: 'https://api.dicebear.com/7.x/identicon/svg?seed=SIIPA' }
+        ],
+        participants: [
+          { id: 'p1', name: 'BENGGG', avatar: DEFAULT_AVATAR + 'BENGGG', type: 'FIXED', status: 'ACTIVE', present: true, totalScore: 0, roundCatches: [], historyLog: [] },
+          { id: 'p2', name: 'Raka123', avatar: DEFAULT_AVATAR + 'Raka123', type: 'RANDOM', status: 'ACTIVE', present: true, totalScore: 0, roundCatches: [], historyLog: [] },
+          { id: 'p3', name: 'Sisypus', avatar: DEFAULT_AVATAR + 'Sisypus', type: 'FIXED', status: 'ACTIVE', present: true, totalScore: 0, roundCatches: [], historyLog: [] }
+        ],
+        history: []
+      },
 
-    let initialTimeMinutes = 15;
-    let timeLeft = initialTimeMinutes * 60;
-    let timerInterval = null;
+      pointRushLocations: [
+        "FISHERMAN ISLAND", "OCEAN", "KOHANA", "KOHANA VOLCANO", "VOLCANIC CAVERN",
+        "CORAL REEFS", "ESOTERIC DEPTHS", "TROPICAL GROVE", "CRATER ISLAND", "SISYPUS STATUE",
+        "TREASURE ROOM", "PLANETARY OBSERVATORY", "LAVA BASIN", "ANCIENT JUNGLE", "UNDERGROUND CELLAR",
+        "SACRED TEMPLE", "STINGRAY SHORES", "COPPER CANYON", "COPPER CANYON MINES", "UNDERWATER CITY",
+        "SEWERS", "KOHANA LAB", "ANCIENT RUIN", "PIRATE COVE", "PIRATE TREASURE ROOM",
+        "CRYSTAL DEPTHS", "GLOOMCAP GROTTO", "ELEMENTAL ISLAND", "THRONE ROOM", "WEATHER MACHINE"
+      ],
 
-    window.onload = function() {
-        loadFromLocalStorage();
-        render();
-        updateTimerDisplay();
-    };
+      locationSpecificFish: {
+        "PLANETARY OBSERVATORY": [
+          { label: "COSMIC SHARK", pts: "+2", val: 2 },
+          { label: "SHINY/BIG/MUTASI COSMIC SHARK", pts: "+3", val: 3 },
+          { label: "BIG SHINY/MUTASI COSMIC SHARK", pts: "+4", val: 4 },
+          { label: "SHINY BIG MUTASI COSMIC SHARK", pts: "+5", val: 5 }
+        ],
+        "ANCIENT JUNGLE": [
+          { label: "RAGNAREX", pts: "+10", val: 10 },
+          { label: "RAGNAREX MUTASI", pts: "+15", val: 15 },
+          { label: "THUNDERZILLA", pts: "+10", val: 10 },
+          { label: "THUNDERZILLA MUTASI", pts: "+15", val: 15 }
+        ],
+        "KOHANA": [
+          { label: "EVERBLOOM", pts: "+10", val: 10 },
+          { label: "EVERBLOOM MUTASI", pts: "+15", val: 15 }
+        ],
+        "COPPER CANYON MINES": [
+          { label: "CERULEAN DRAGON", pts: "+10", val: 10 },
+          { label: "CERULEAN DRAGON MUTASI", pts: "+15", val: 15 }
+        ],
+        "UNDERWATER CITY": [
+          { label: "SEA EATER", pts: "+10", val: 10 },
+          { label: "SEA EATER MUTASI", pts: "+15", val: 15 },
+          { label: "FLOURIVANE", pts: "+10", val: 10 },
+          { label: "FLOURIVANE MUTASI", pts: "+15", val: 15 }
+        ],
+        "MARIANA TRENCH": [
+          { label: "TRENCH WARDEN", pts: "+10", val: 10 },
+          { label: "TRENCH WARDEN MUTASI", pts: "+15", val: 15 }
+        ],
+        "THRONE ROOM": [
+          { label: "HYDRA", pts: "+10", val: 10 },
+          { label: "HYDRA MUTASI", pts: "+15", val: 15 },
+          { label: "OVERLORD HYDRA", pts: "+10", val: 10 },
+          { label: "OVERLORD HYDRA MUTASI", pts: "+15", val: 15 }
+        ],
+        "GLOOMCAP GROTTO": [
+          { label: "CRIMSON DREADTUSK", pts: "+10", val: 10 },
+          { label: "CRIMSON DREADTUSK MUTASI", pts: "+15", val: 15 }
+        ],
+        "CRATER": [
+          { label: "CRYSTALLINE BEHEMOTH", pts: "+10", val: 10 },
+          { label: "CRYSTALLINE BEHEMOTH MUTASI", pts: "+15", val: 15 }
+        ]
+      },
 
-    function saveToLocalStorage() {
-        appData.timeLeft = timeLeft;
-        localStorage.setItem('warPointTournamentData', JSON.stringify(appData));
-    }
+      init() {
+        this.loadStorage();
+        this.renderAll();
+        this.switchView('dashboard', document.querySelector('.side-nav.active'));
+      },
 
-    function loadFromLocalStorage() {
-        const saved = localStorage.getItem('warPointTournamentData');
+      setTheme(themeName) {
+        this.state.currentTheme = themeName;
+        document.body.className = themeName;
+        if (this.state.obsMode) document.body.classList.add('obs-mode');
+        this.saveStorage();
+      },
+
+      saveStorage() {
+        localStorage.setItem('GALATAMA_STATE_V5_BULK_FINAL', JSON.stringify({
+          mode: this.state.mode, currentTheme: this.state.currentTheme,
+          timer: { durationMinutes: this.state.timer.durationMinutes, secondsLeft: this.state.timer.secondsLeft },
+          survival: this.state.survival, pointRushLocation: this.state.pointRushLocation,
+          prizes: this.state.prizes, sponsors: this.state.sponsors,
+          participants: this.state.participants, history: this.state.history
+        }));
+      },
+
+      loadStorage() {
+        const saved = localStorage.getItem('GALATAMA_STATE_V5_BULK_FINAL');
         if (saved) {
-            try { 
-                appData = JSON.parse(saved); 
-                if(!appData.sponsors) appData.sponsors = ["SPONSOR 1", "SPONSOR 2"];
-                if(!appData.matchMode || !MODE_CONFIGS[appData.matchMode]) appData.matchMode = 'SURVIVAL';
-                if(appData.timeLeft !== undefined) timeLeft = appData.timeLeft;
-            } catch (e) {}
+          try {
+            const parsed = JSON.parse(saved);
+            this.state.mode = parsed.mode || this.state.mode;
+            this.state.currentTheme = parsed.currentTheme || '';
+            if(this.state.currentTheme) document.body.className = this.state.currentTheme;
+            this.state.timer.durationMinutes = parsed.timer?.durationMinutes || 15;
+            this.state.timer.secondsLeft = parsed.timer?.secondsLeft || 900;
+            this.state.survival = parsed.survival || this.state.survival;
+            this.state.pointRushLocation = parsed.pointRushLocation || 'FISHERMAN ISLAND';
+            this.state.prizes = parsed.prizes || this.state.prizes;
+            this.state.sponsors = parsed.sponsors || this.state.sponsors;
+            this.state.participants = parsed.participants || this.state.participants;
+            this.state.history = parsed.history || [];
+          } catch(e) { console.error(e); }
         }
-    }
+      },
 
-    function switchMode(newMode) {
-        if (MODE_CONFIGS[newMode]) {
-            appData.matchMode = newMode;
-            saveToLocalStorage();
-            render();
-        }
-    }
+      switchView(viewName, el) {
+        this.state.activeView = viewName;
+        document.querySelectorAll('.side-nav').forEach(nav => nav.classList.remove('active'));
+        if (el) el.classList.add('active');
 
-    function applyCustomTimer() {
-        const val = parseInt(document.getElementById('customMinutes').value);
-        if (val && val > 0) {
-            initialTimeMinutes = val;
-            resetTimer();
+        document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+        document.querySelectorAll(`.view-${viewName}`).forEach(sec => {
+          if (sec.id === 'pointRushCard' && this.state.mode !== 'POINT_RUSH') return;
+          if (sec.id === 'survivalCard' && this.state.mode !== 'SURVIVAL') return;
+          sec.classList.remove('hidden');
+        });
+      },
+
+      toggleOBSMode() {
+        this.state.obsMode = !this.state.obsMode;
+        if (this.state.obsMode) {
+          document.body.classList.add('obs-mode');
+          document.getElementById('obsWidget').style.display = 'block';
         } else {
-            alert("Masukkan angka menit yang valid!");
+          document.body.classList.remove('obs-mode');
+          if (this.state.currentTheme) document.body.classList.add(this.state.currentTheme);
+          document.getElementById('obsWidget').style.display = 'none';
         }
-    }
+        this.renderLeaderboard();
+      },
 
-    function updateTimerDisplay() {
-        const hours = Math.floor(timeLeft / 3600);
-        const minutes = Math.floor((timeLeft % 3600) / 60);
-        const seconds = timeLeft % 60;
+      confirmStartTimer() {
+        if (this.state.timer.isRunning) return;
+        document.getElementById('startConfirmModal').classList.remove('hidden');
+      },
+
+      startTimerAction(markAll) {
+        if (markAll) {
+          this.state.participants.forEach(p => p.present = true);
+        }
+        document.getElementById('startConfirmModal').classList.add('hidden');
+        this.startTimer();
+      },
+
+      startTimer() {
+        if (this.state.timer.isRunning) return;
+        this.state.timer.isRunning = true;
+        clearInterval(this.state.timer.intervalId);
+        this.state.timer.intervalId = setInterval(() => {
+          if (this.state.timer.secondsLeft > 0) {
+            this.state.timer.secondsLeft--;
+            this.renderTimerDisplay();
+            this.saveStorage();
+          } else {
+            this.pauseTimer(); AudioEngine.playBuzzer(); alert('Waktu Pertandingan Habis!');
+          }
+        }, 1000);
+      },
+
+      pauseTimer() { this.state.timer.isRunning = false; clearInterval(this.state.timer.intervalId); this.saveStorage(); },
+      resetTimer() { this.pauseTimer(); this.state.timer.secondsLeft = this.state.timer.durationMinutes * 60; this.renderTimerDisplay(); this.saveStorage(); },
+
+      setCustomTime() {
+        const min = prompt("Durasi timer (Menit):", this.state.timer.durationMinutes);
+        if (min && !isNaN(min) && min > 0) {
+          this.state.timer.durationMinutes = parseInt(min); this.resetTimer();
+        }
+      },
+
+      changeMode(newMode) {
+        this.state.mode = newMode; this.saveStorage(); this.renderAll(); this.switchView(this.state.activeView);
+      },
+
+      setPointRushLocation(locName) {
+        this.state.pointRushLocation = locName; this.saveStorage(); this.renderPointRush(); this.renderCatchGrid();
+      },
+
+      spinWheel() {
+        if (this.isSpinning) return;
+        this.isSpinning = true;
+        const display = document.getElementById('spinwheelDisplay');
+        display.classList.add('animating');
         
-        let timeString = hours > 0 
-            ? `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-            : `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        let counter = 0; const speed = 50; const totalDuration = 2500;
+        const spinInterval = setInterval(() => {
+          const randomIndex = Math.floor(Math.random() * this.pointRushLocations.length);
+          display.innerText = this.pointRushLocations[randomIndex];
+          AudioEngine.playPop(); counter += speed;
+          
+          if (counter >= totalDuration) {
+            clearInterval(spinInterval);
+            const finalIndex = Math.floor(Math.random() * this.pointRushLocations.length);
+            const finalLoc = this.pointRushLocations[finalIndex];
+            display.innerText = finalLoc;
+            display.classList.remove('animating');
+            this.isSpinning = false;
+            this.setPointRushLocation(finalLoc);
+            AudioEngine.playFanfare();
+          }
+        }, speed);
+      },
 
-        document.getElementById('timerDisplay').innerText = timeString;
-        appData.timerDisplay = timeString;
-        saveToLocalStorage();
-    }
-
-    function toggleTimer() {
-        const btn = document.getElementById('startStopBtn');
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            btn.innerText = 'Start';
-            btn.style.backgroundColor = 'var(--border-glow)';
-            btn.style.color = '#fff';
-        } else {
-            btn.innerText = 'Pause';
-            btn.style.backgroundColor = 'var(--accent-yellow)';
-            btn.style.color = '#000';
-            timerInterval = setInterval(() => {
-                if (timeLeft > 0) {
-                    timeLeft--;
-                    updateTimerDisplay();
-                } else {
-                    clearInterval(timerInterval);
-                    timerInterval = null;
-                    btn.innerText = 'Start';
-                    alert("⏱️ Waktu pertandingan telah habis!");
-                }
-            }, 1000);
+      toggleAttendance(id) {
+        const p = this.state.participants.find(x => x.id === id);
+        if (p) {
+          p.present = !p.present;
+          this.saveStorage(); this.renderAll();
         }
-    }
+      },
 
-    function resetTimer() {
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        }
-        timeLeft = initialTimeMinutes * 60;
-        updateTimerDisplay();
-        const btn = document.getElementById('startStopBtn');
-        btn.innerText = 'Start';
-        btn.style.backgroundColor = 'var(--border-glow)';
-        btn.style.color = '#fff';
-    }
+      markAllAttendance(status) {
+        this.state.participants.forEach(p => p.present = status);
+        this.saveStorage(); this.renderAll();
+      },
 
-    function formatUsername(input) {
-        let cleaned = input.trim();
-        if (!cleaned) return null;
-        if (!cleaned.startsWith('@')) cleaned = '@' + cleaned;
-        return cleaned;
-    }
+      savePrizes() {
+        this.state.prizes.rank1 = document.getElementById('prizeRank1').value;
+        this.state.prizes.rank2 = document.getElementById('prizeRank2').value;
+        this.state.prizes.rank3 = document.getElementById('prizeRank3').value;
+        this.saveStorage(); this.renderLeaderboard();
+      },
 
-    function submitResult(actionType, points, actionLabel) {
-        const userInput = document.getElementById('inputUsername').value;
-        const formattedUser = formatUsername(userInput);
-
-        if (!formattedUser) {
-            alert("Harap masukkan username!");
-            return;
-        }
-
-        const userKey = formattedUser.toLowerCase();
-
-        if (!appData.players[userKey]) {
-            appData.players[userKey] = { displayName: formattedUser };
-        }
-
-        if (appData.matchMode === 'SURVIVAL' && actionType === 'SECRET') {
-            const hasSecretInRound = appData.history.some(item => 
-                item.mode === 'SURVIVAL' &&
-                item.round === appData.currentRound && 
-                item.usernameKey === userKey && 
-                item.type === 'SECRET'
-            );
-
-            if (hasSecretInRound) {
-                alert(`⚠️ ${appData.players[userKey].displayName} sudah dapat poin Secret di ronde ini!`);
-                return;
-            }
-        }
-
-        appData.history.push({
-            id: Date.now(),
-            round: MODE_CONFIGS[appData.matchMode].isRoundsMode ? appData.currentRound : null,
-            mode: appData.matchMode,
-            usernameKey: userKey,
-            type: actionType,
-            label: actionLabel,
-            points: points
-        });
-
-        document.getElementById('inputUsername').value = '';
-        saveToLocalStorage();
-        render();
-    }
-
-    function deleteEntry(id) {
-        if (confirm("Hapus data ini?")) {
-            appData.history = appData.history.filter(item => item.id !== id);
-            saveToLocalStorage();
-            render();
-        }
-    }
-
-    function nextRound() {
-        if (confirm(`Lanjut ke RONDE ${appData.currentRound + 1}?`)) {
-            appData.currentRound += 1;
-            resetTimer();
-            saveToLocalStorage();
-            render();
-        }
-    }
-
-    function addSponsor() {
-        const name = prompt("Masukkan Nama Sponsor / Partner Baru:");
-        if (name && name.trim() !== "") {
-            appData.sponsors.push(name.trim().toUpperCase());
-            saveToLocalStorage();
-            render();
-        }
-    }
-
-    function deleteSponsor(index) {
-        if (confirm(`Hapus sponsor "${appData.sponsors[index]}"?`)) {
-            appData.sponsors.splice(index, 1);
-            saveToLocalStorage();
-            render();
-        }
-    }
-
-    function resetSponsorsOnly() {
-        if (confirm("Hapus SEMUA daftar sponsor saja? (Data pemain & skor tetep AMAN)")) {
-            appData.sponsors = [];
-            saveToLocalStorage();
-            render();
-        }
-    }
-
-    function resetMatchDataOnly() {
-        if (confirm("⚠️ RESET POIN & MATCH? (Semua pemain dan poin dihapus, daftar SPONSOR TETAP AMAN)")) {
-            appData.currentRound = 1;
-            appData.players = {};
-            appData.history = [];
-            resetTimer();
-            saveToLocalStorage();
-            render();
-        }
-    }
-
-    function render() {
-        const currentConfig = MODE_CONFIGS[appData.matchMode];
-
-        const roundBadge = document.getElementById('currentRoundDisplay');
-        const nextRoundBtn = document.getElementById('nextRoundBtn');
-        const leftTitle = document.getElementById('leftBoardTitle');
-        const activeRoundSub = document.getElementById('activeRoundSub');
-
-        if (currentConfig.isRoundsMode) {
-            roundBadge.style.display = 'block';
-            nextRoundBtn.style.display = 'block';
-            activeRoundSub.style.display = 'inline';
-            roundBadge.innerText = `RONDE ${appData.currentRound}`;
-            activeRoundSub.innerText = `RONDE ${appData.currentRound}`;
-            leftTitle.innerText = "HASIL RONDE AKTIF";
-        } else {
-            roundBadge.style.display = 'none';
-            nextRoundBtn.style.display = 'none';
-            activeRoundSub.style.display = 'none';
-            leftTitle.innerText = `LOG ${currentConfig.name}`;
-        }
-
-        document.getElementById('inputModeDisplay').innerText = currentConfig.name;
-
-        Object.keys(MODE_CONFIGS).forEach(mKey => {
-            const btn = document.getElementById(`btn-${mKey}`);
-            if (btn) {
-                if (mKey === appData.matchMode) btn.classList.add('active');
-                else btn.classList.remove('active');
-            }
-        });
-
-        const actionContainer = document.getElementById('actionButtonsContainer');
-        actionContainer.innerHTML = '';
-        currentConfig.actions.forEach(act => {
-            const btn = document.createElement('button');
-            btn.className = `btn ${act.class}`;
-            btn.innerText = act.label;
-            btn.onclick = () => submitResult(act.type, act.pts, act.label);
-            actionContainer.appendChild(btn);
-        });
-
-        const headerRow = document.getElementById('tableHeaderRow');
-        if (currentConfig.hasStatusCol) {
-            headerRow.innerHTML = `
-                <th>Username</th>
-                <th>Hasil</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            `;
-        } else {
-            headerRow.innerHTML = `
-                <th>Username</th>
-                <th>Hasil</th>
-                <th>Point</th>
-                <th>Aksi</th>
-            `;
-        }
-
-        const activeTable = document.getElementById('activeRoundTable');
-        activeTable.innerHTML = '';
-        
-        let filteredEntries = [];
-        if (currentConfig.isRoundsMode) {
-            filteredEntries = appData.history.filter(item => item.mode === appData.matchMode && item.round === appData.currentRound);
-        } else {
-            filteredEntries = appData.history.filter(item => item.mode === appData.matchMode);
-        }
-
-        if (filteredEntries.length === 0) {
-            activeTable.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Belum ada data tercatat</td></tr>`;
-        } else {
-            [...filteredEntries].reverse().forEach(entry => {
-                const displayName = appData.players[entry.usernameKey]?.displayName || entry.usernameKey;
-                
-                let colThree = '';
-                if (currentConfig.hasStatusCol) {
-                    colThree = entry.type === 'SECRET' 
-                        ? `<span class="badge-status status-waiting">🏠 WAITING</span>` 
-                        : `<span class="badge-status status-survive">🟢 SURVIVE</span>`;
-                } else {
-                    colThree = `<span style="color: var(--accent-cyan); font-weight: bold;">+${entry.points} PTS</span>`;
-                }
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><strong>${displayName}</strong></td>
-                    <td style="color: var(--accent-pink); font-size: 0.9rem;">${entry.label || entry.type}</td>
-                    <td>${colThree}</td>
-                    <td><button class="delete-btn" onclick="deleteEntry(${entry.id})">✕</button></td>
-                `;
-                activeTable.appendChild(row);
-            });
-        }
-
-        const totalTable = document.getElementById('totalScoreTable');
-        totalTable.innerHTML = '';
-        const totals = {};
-        Object.keys(appData.players).forEach(key => totals[key] = 0);
-
-        appData.history.forEach(item => {
-            totals[item.usernameKey] = (totals[item.usernameKey] || 0) + item.points;
-        });
-
-        const leaderboard = Object.keys(totals).map(key => ({
-            usernameKey: key,
-            displayName: appData.players[key]?.displayName || key,
-            totalPoints: totals[key]
-        })).sort((a, b) => b.totalPoints - a.totalPoints);
-
-        if (leaderboard.length === 0) {
-            totalTable.innerHTML = `<tr><td colspan="3" style="text-align:center; color: var(--text-muted);">Belum ada skor</td></tr>`;
-        } else {
-            leaderboard.forEach((player, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="rank-number">${index + 1}</td>
-                    <td><strong>${player.displayName}</strong></td>
-                    <td><span style="color: var(--accent-cyan); font-weight: 900; font-size: 1.2rem;">${player.totalPoints}</span> PTS</td>
-                `;
-                totalTable.appendChild(row);
-            });
-        }
-
-        const sponsorContainer = document.getElementById('sponsorContainer');
-        sponsorContainer.innerHTML = '';
-        if (appData.sponsors.length === 0) {
-            sponsorContainer.innerHTML = `<span style="color: var(--text-muted); font-size: 0.85rem;">Belum ada sponsor.</span>`;
-        } else {
-            appData.sponsors.forEach((sp, idx) => {
-                const card = document.createElement('div');
-                card.className = 'sponsor-card';
-                card.innerHTML = `
-                    <span>⚡ ${sp}</span>
-                    <button class="delete-sponsor-btn" onclick="deleteSponsor(${idx})">✕</button>
-                `;
-                sponsorContainer.appendChild(card);
-            });
-        }
-    }
-
-    function exportData() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
-        const downloadAnchor = document.createElement('a');
-        downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", `tournament_war_point.json`);
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        downloadAnchor.remove();
-    }
-
-    function importData(event) {
-        const fileReader = new FileReader();
-        fileReader.onload = function(e) {
-            try {
-                const importedData = JSON.parse(e.target.result);
-                if (importedData.players && importedData.history) {
-                    appData = importedData;
-                    saveToLocalStorage();
-                    render();
-                    alert("Data Control Centre berhasil diimport!");
-                }
-            } catch (err) { alert("File JSON tidak valid."); }
+      handleSponsorLogoSelect(e) {
+        const file = e.target.files[0]; if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          this.tempBase64Sponsor = evt.target.result;
+          document.getElementById('btnSponsorLogoLabel').innerText = `✅ TERPILIH`;
         };
-        fileReader.readAsText(event.target.files[0]);
-    }
-</script>
+        reader.readAsDataURL(file);
+      },
 
+      addSponsor() {
+        const nameInput = document.getElementById('sponsorName');
+        const urlInput = document.getElementById('sponsorLogoUrl');
+        const name = nameInput.value.trim(); if(!name) return;
+
+        let logo = 'https://api.dicebear.com/7.x/identicon/svg?seed=' + encodeURIComponent(name);
+        if(this.tempBase64Sponsor) logo = this.tempBase64Sponsor;
+        else if(urlInput.value.trim()) logo = urlInput.value.trim();
+
+        this.state.sponsors.push({ id: 'sp_' + Date.now(), name: name, logo: logo });
+        nameInput.value = ''; urlInput.value = ''; this.tempBase64Sponsor = null;
+        document.getElementById('btnSponsorLogoLabel').innerText = '📁 LOGO LOKAL';
+
+        this.saveStorage(); this.renderSponsors();
+      },
+
+      deleteSponsor(id) {
+        this.state.sponsors = this.state.sponsors.filter(x => x.id !== id);
+        this.saveStorage(); this.renderSponsors();
+      },
+
+      renderSponsors() {
+        document.getElementById('sponsorTbody').innerHTML = this.state.sponsors.map(s => `
+          <tr>
+            <td><img src="${s.logo}" class="user-avatar" style="width:24px; height:24px;"></td>
+            <td><b>${s.name}</b></td>
+            <td style="text-align:center;"><button class="btn btn-red btn-sm" onclick="App.deleteSponsor('${s.id}')">HAPUS</button></td>
+          </tr>
+        `).join('');
+
+        document.getElementById('prizeRank1').value = this.state.prizes.rank1 || '';
+        document.getElementById('prizeRank2').value = this.state.prizes.rank2 || '';
+        document.getElementById('prizeRank3').value = this.state.prizes.rank3 || '';
+      },
+
+      announceWinners() {
+        const sorted = [...this.state.participants].sort((a,b) => b.totalScore - a.totalScore);
+        const top1 = sorted[0]; const top2 = sorted[1]; const top3 = sorted[2];
+
+        let html = '';
+        if(top2) {
+          html += `
+            <div class="winner-box w-rank-2">
+              <div class="w-badge-title">🥈 JUARA 2</div>
+              <img src="${top2.avatar}" class="winner-avatar">
+              <div class="w-name">${top2.name}</div>
+              <div class="w-score">${top2.totalScore} Pts</div>
+              <div class="w-prize">${this.state.prizes.rank2 || 'Hadiah Juara 2'}</div>
+            </div>`;
+        }
+        if(top1) {
+          html += `
+            <div class="winner-box w-rank-1">
+              <div class="w-badge-title">👑 JUARA 1</div>
+              <img src="${top1.avatar}" class="winner-avatar">
+              <div class="w-name">${top1.name}</div>
+              <div class="w-score">${top1.totalScore} Pts</div>
+              <div class="w-prize">${this.state.prizes.rank1 || 'Hadiah Utama'}</div>
+            </div>`;
+        }
+        if(top3) {
+          html += `
+            <div class="winner-box w-rank-3">
+              <div class="w-badge-title">🥉 JUARA 3</div>
+              <img src="${top3.avatar}" class="winner-avatar">
+              <div class="w-name">${top3.name}</div>
+              <div class="w-score">${top3.totalScore} Pts</div>
+              <div class="w-prize">${this.state.prizes.rank3 || 'Hadiah Juara 3'}</div>
+            </div>`;
+        }
+
+        document.getElementById('winnerPodiumGrid').innerHTML = html || '<p style="color:var(--text-muted)">Belum ada pemenang.</p>';
+        document.getElementById('winnerModal').classList.remove('hidden');
+        AudioEngine.playFanfare();
+      },
+
+      handleFileSelect(e) {
+        const file = e.target.files[0]; if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          this.tempBase64Avatar = evt.target.result;
+          document.getElementById('btnLocalAvatarLabel').innerText = `✅ TERPILIH`;
+        };
+        reader.readAsDataURL(file);
+      },
+
+      handleAvatarChangeFile(e) {
+        const file = e.target.files[0];
+        if (!file || !this.editingParticipantId) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          const p = this.state.participants.find(x => x.id === this.editingParticipantId);
+          if (p) {
+            p.avatar = evt.target.result;
+            this.saveStorage(); this.renderAll(); this.showPlayerDetail(p.id);
+          }
+        };
+        reader.readAsDataURL(file);
+      },
+
+      triggerChangeAvatarFile(id) {
+        this.editingParticipantId = id;
+        document.getElementById('changeAvatarFileInput').click();
+      },
+
+      submitCatch(catchResult, pointOverride) {
+        if (!this.state.selectedId) return alert('Pilih peserta dari tabel dulu!');
+        const p = this.state.participants.find(x => x.id === this.state.selectedId);
+        if (!p) return;
+        if (p.status !== 'ACTIVE') return alert(`Peserta ${p.name} tereliminasi!`);
+
+        let points = pointOverride !== undefined ? pointOverride : 0;
+
+        p.totalScore += points;
+        if(!p.roundCatches) p.roundCatches = [];
+        p.roundCatches.push(catchResult);
+
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const logId = 'log_' + Date.now();
+
+        if(!p.historyLog) p.historyLog = [];
+        p.historyLog.push({ id: logId, result: catchResult, points: points, mode: this.state.mode });
+
+        let locDetail = this.state.mode === 'POINT_RUSH' ? this.state.pointRushLocation : null;
+
+        this.state.history.unshift({
+          id: logId, participantId: p.id, time: timeStr, participantName: p.name,
+          participantAvatar: p.avatar, mode: this.state.mode,
+          round: this.state.mode === 'SURVIVAL' ? this.state.survival.round : null,
+          location: locDetail, catchResult: catchResult, points: points
+        });
+
+        AudioEngine.playPop(); this.saveStorage(); this.renderAll();
+      },
+
+      deleteLog(logId) {
+        const itemIndex = this.state.history.findIndex(h => h.id === logId);
+        if (itemIndex === -1) return;
+        const item = this.state.history[itemIndex];
+
+        if (confirm(`Batalkan tangkapan "${item.catchResult}" (+${item.points} pts) untuk ${item.participantName}?`)) {
+          const p = this.state.participants.find(x => x.id === item.participantId || x.name === item.participantName);
+          if (p) {
+            p.totalScore = Math.max(0, p.totalScore - item.points);
+            if(p.historyLog) p.historyLog = p.historyLog.filter(x => x.id !== logId);
+          }
+          this.state.history.splice(itemIndex, 1);
+          AudioEngine.playAlert(); this.saveStorage(); this.renderAll();
+        }
+      },
+
+      overrideScore(id) {
+        const p = this.state.participants.find(x => x.id === id); if (!p) return;
+        const newScore = prompt(`Total Poin Baru untuk ${p.name}:`, p.totalScore);
+        if (newScore !== null && !isNaN(newScore)) {
+          p.totalScore = parseInt(newScore); this.saveStorage(); this.renderAll();
+        }
+      },
+
+      nextRound() {
+        if (this.state.mode !== 'SURVIVAL') return;
+        this.state.participants.forEach(p => {
+          if (p.status === 'ACTIVE') {
+            const hasPassed = (p.roundCatches || []).some(c => c.includes('SECRET') || c === 'MITOS');
+            if (!hasPassed) p.status = 'ELIMINATED';
+            p.roundCatches = [];
+          }
+        });
+
+        if (this.state.survival.round < 5) this.state.survival.round += 1;
+        else alert('Survival Mode telah mencapai Round Akhir (5)!');
+
+        AudioEngine.playAlert(); this.resetTimer(); this.saveStorage(); this.renderAll();
+      },
+
+      addPeserta() {
+        const inputName = document.getElementById('newPesertaName');
+        const inputUrl = document.getElementById('newPesertaAvatarUrl');
+        const typeSelect = document.getElementById('newPesertaType');
+        const name = inputName.value.trim(); if (!name) return;
+
+        let finalAvatar = DEFAULT_AVATAR + encodeURIComponent(name);
+        if (this.tempBase64Avatar) finalAvatar = this.tempBase64Avatar;
+        else if (inputUrl.value.trim()) finalAvatar = inputUrl.value.trim();
+
+        this.state.participants.push({
+          id: 'p_' + Date.now(), name: name, avatar: finalAvatar, type: typeSelect.value,
+          status: 'ACTIVE', present: true, totalScore: 0, roundCatches: [], historyLog: []
+        });
+
+        inputName.value = ''; inputUrl.value = ''; this.tempBase64Avatar = null;
+        document.getElementById('btnLocalAvatarLabel').innerText = '📁 UPLOAD GAMBAR LOKAL';
+
+        this.saveStorage(); this.renderAll();
+      },
+
+      bulkImportPeserta() {
+        const text = document.getElementById('bulkPesertaText').value.trim();
+        if (!text) return alert("Kotak teks masih kosong!");
+        const lines = text.split('\n');
+        let count = 0;
+
+        lines.forEach(line => {
+          const name = line.trim();
+          if (name) {
+            this.state.participants.push({
+              id: 'p_' + Date.now() + '_' + Math.random().toString(36).substring(2,5),
+              name: name,
+              avatar: DEFAULT_AVATAR + encodeURIComponent(name),
+              type: 'FIXED',
+              status: 'ACTIVE',
+              present: true,
+              totalScore: 0,
+              roundCatches: [],
+              historyLog: []
+            });
+            count++;
+          }
+        });
+
+        document.getElementById('bulkPesertaText').value = '';
+        this.saveStorage();
+        this.renderAll();
+        alert(`Berhasil mengimpor ${count} peserta secara massal!`);
+      },
+
+      deletePeserta(id, e) {
+        if (e) e.stopPropagation();
+        if (confirm(`Hapus peserta ini?`)) {
+          this.state.participants = this.state.participants.filter(x => x.id !== id);
+          this.saveStorage(); this.renderAll();
+        }
+      },
+
+      showPlayerDetail(id) {
+        const p = this.state.participants.find(x => x.id === id); if (!p) return;
+        this.editingParticipantId = p.id;
+        document.getElementById('modalPlayerName').innerText = `DETAIL: ${p.name.toUpperCase()}`;
+        
+        let logHtml = (p.historyLog || []).map(h => `
+          <div style="display:flex; justify-content:space-between; background:#0e0b24; padding:6px; border-radius:4px; align-items:center;">
+            <span>${h.result} (${h.mode})</span>
+            <b style="color:var(--cyan-accent);">+${h.points} Pts</b>
+          </div>
+        `).join('') || '<p style="color:var(--text-muted);">Belum ada tangkapan.</p>';
+
+        document.getElementById('modalPlayerStats').innerHTML = `
+          <div style="display:flex; align-items:center; gap:12px;">
+            <img src="${p.avatar}" class="user-avatar" style="width:50px; height:50px;">
+            <div>
+              <div style="font-size:14px; font-weight:800;">${p.name}</div>
+              <div>ABSEN: <b style="color:${p.present ? 'var(--cyan-accent)' : 'var(--danger)'}">${p.present ? 'HADIR' : 'ALPHA'}</b></div>
+              <div>STATUS: <b style="color:${p.status === 'ACTIVE' ? 'var(--success)' : 'var(--danger)'}">${p.status}</b></div>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+            <span>TOTAL POIN: <b style="color:var(--gold); font-size:16px;">${p.totalScore}</b></span>
+            <button class="btn btn-purple btn-sm" onclick="App.triggerChangeAvatarFile('${p.id}')">📂 GANTI FOTO LOKAL</button>
+          </div>
+          <hr style="border-color:var(--card-border);">
+          <b style="color:var(--cyan-accent);">RIWAYAT TANGKAPAN PESERTA:</b>
+          <div style="max-height:160px; overflow-y:auto; display:flex; flex-direction:column; gap:4px;">${logHtml}</div>
+        `;
+        document.getElementById('playerModal').classList.remove('hidden');
+      },
+
+      closeModal(modalId) { document.getElementById(modalId).classList.add('hidden'); },
+
+      exportCSV() {
+        let csv = 'Nama,Tipe,Absen,Status,Total Poin\n';
+        this.state.participants.forEach(p => { csv += `"${p.name}","${p.type}","${p.present ? 'HADIR' : 'ALPHA'}","${p.status}",${p.totalScore}\n`; });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = `Galatama_Export_${Date.now()}.csv`; a.click();
+      },
+
+      exportJSON() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.state));
+        const a = document.createElement('a'); a.href = dataStr; a.download = `Galatama_Backup_${Date.now()}.json`; a.click();
+      },
+
+      importJSON(e) {
+        const file = e.target.files[0]; if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const data = JSON.parse(event.target.result);
+            if (data.participants) {
+              this.state = { ...this.state, ...data };
+              this.saveStorage(); this.renderAll(); alert("Data Restored!");
+            }
+          } catch(err) { alert("File tidak valid!"); }
+        };
+        reader.readAsText(file);
+      },
+
+      resetAllData() {
+        if (confirm("Reset SELURUH data tournament?")) {
+          localStorage.removeItem('GALATAMA_STATE_V5_BULK_FINAL'); location.reload();
+        }
+      },
+
+      selectParticipant(id, name) {
+        this.state.selectedId = id;
+        document.getElementById('selectedLabel').innerText = `TERPILIH: ${name.toUpperCase()}`;
+        this.renderPeserta();
+      },
+
+      filterPeserta(el, type) {
+        document.querySelectorAll('.tab-filter .tab-item').forEach(t => t.classList.remove('active'));
+        el.classList.add('active'); this.state.currentFilter = type; this.renderPeserta();
+      },
+
+      renderAll() {
+        this.renderStats(); this.renderModes(); this.renderTimerDisplay();
+        this.renderSurvival(); this.renderPointRush(); this.renderCatchGrid();
+        this.renderPeserta(); this.renderLeaderboard(); this.renderHistory(); this.renderSponsors();
+      },
+
+      renderStats() {
+        document.getElementById('statTotalPeserta').innerText = this.state.participants.length;
+        document.getElementById('statHadirPeserta').innerText = this.state.participants.filter(x => x.present).length;
+        document.getElementById('statActivePeserta').innerText = this.state.participants.filter(x => x.status === 'ACTIVE').length;
+        document.getElementById('statTotalCatch').innerText = this.state.history.length;
+        document.getElementById('statTopScore').innerText = this.state.participants.reduce((max, p) => p.totalScore > max ? p.totalScore : max, 0);
+      },
+
+      renderModes() {
+        document.querySelectorAll('.mode-btn').forEach(el => el.classList.remove('active'));
+        const activeBtn = document.getElementById(`m-${this.state.mode}`);
+        if (activeBtn) activeBtn.classList.add('active');
+      },
+
+      renderTimerDisplay() {
+        const sec = this.state.timer.secondsLeft;
+        const m = String(Math.floor(sec / 60)).padStart(2, '0');
+        const s = String(sec % 60).padStart(2, '0');
+        document.getElementById('timerClock').innerText = `${m}:${s}`;
+        document.getElementById('obsTimer').innerText = `${m}:${s}`;
+      },
+
+      renderSurvival() {
+        if (this.state.mode === 'SURVIVAL') {
+          document.getElementById('roundText').innerText = `${this.state.survival.round} / 5`;
+          let html = '';
+          for (let i = 1; i <= 5; i++) html += `<div class="chip ${i === this.state.survival.round ? 'active' : ''}">${i}</div>`;
+          document.getElementById('roundChips').innerHTML = html;
+        }
+      },
+
+      renderPointRush() {
+        if (this.state.mode === 'POINT_RUSH') {
+          document.getElementById('spinwheelDisplay').innerText = this.state.pointRushLocation;
+          document.getElementById('pointRushLocationGrid').innerHTML = this.pointRushLocations.map(loc => {
+            const hasFish = this.locationSpecificFish[loc] ? ` <span style="font-size:7px; color:var(--cyan-accent);">[🐟 FORGOTTEN]</span>` : '';
+            return `
+              <div class="loc-btn ${this.state.pointRushLocation === loc ? 'active' : ''}" onclick="App.setPointRushLocation('${loc}')">
+                <span class="loc-name">${loc}${hasFish}</span>
+              </div>
+            `;
+          }).join('');
+        }
+      },
+
+      renderCatchGrid() {
+        const grid = document.getElementById('catchGrid');
+        let buttons = [];
+
+        if (this.state.mode !== 'SURVIVAL') {
+          buttons = [
+            { label: 'SECRET', res: 'SECRET', pts: '+1', pointVal: 1 },
+            { label: 'SECRET BIG', res: 'SECRET BIG', pts: '+2', pointVal: 2 },
+            { label: 'SECRET MUTASI', res: 'SECRET MUTASI', pts: '+2', pointVal: 2 },
+            { label: 'SECRET BIG + MUTASI', res: 'SECRET BIG + MUTASI', pts: '+3', pointVal: 3 },
+            { label: 'SECRET SHINY', res: 'SECRET SHINY', pts: '+2', pointVal: 2 },
+            { label: 'SECRET BIG SHINY', res: 'SECRET BIG SHINY', pts: '+3', pointVal: 3 },
+            { label: 'SECRET BIG SHINY MUTASI', res: 'SECRET BIG SHINY MUTASI', pts: '+4', pointVal: 4 }
+          ];
+        }
+
+        if (this.state.mode === 'SURVIVAL') {
+          buttons = [
+            { label: 'MITOS', res: 'MITOS', pts: '+0', pointVal: 0 },
+            { label: 'SECRET', res: 'SECRET', pts: '+1', pointVal: 1 },
+            { label: 'SECRET BIG', res: 'SECRET BIG', pts: '+2', pointVal: 2 },
+            { label: 'SECRET MUTASI', res: 'SECRET MUTASI', pts: '+2', pointVal: 2 },
+            { label: 'SECRET BIG + MUTASI', res: 'SECRET BIG + MUTASI', pts: '+3', pointVal: 3 }
+          ];
+        } else if (this.state.mode === 'POINT_RUSH') {
+          if (this.state.pointRushLocation === 'CRATER ISLAND') {
+            buttons.push(
+              { label: 'FB 100KG++', res: 'FB 100KG++', pts: '+4', pointVal: 4 },
+              { label: 'FB MAXTON', res: 'FB MAXTON', pts: '+5', pointVal: 5 },
+              { label: 'FB MAXTON MUTASI', res: 'FB MAXTON MUTASI', pts: '+6', pointVal: 6 }
+            );
+          } else if (this.state.pointRushLocation === 'SISYPUS STATUE') {
+            buttons.push(
+              { label: 'PELAGON', res: 'PELAGON', pts: '+2', pointVal: 2 },
+              { label: 'PELAGON BIG', res: 'PELAGON BIG', pts: '+3', pointVal: 3 },
+              { label: 'PELAGON BIG MUTASI', res: 'PELAGON BIG MUTASI', pts: '+4', pointVal: 4 },
+              { label: 'PELAGON BIG MUTASI SHINY', res: 'PELAGON BIG MUTASI SHINY', pts: '+5', pointVal: 5 }
+            );
+          } else if (this.state.pointRushLocation === 'WEATHER MACHINE') {
+            buttons.push(
+              { label: 'WORM FISH', res: 'WORM FISH', pts: '+2', pointVal: 2 },
+              { label: 'WORM FISH BIG', res: 'WORM FISH BIG', pts: '+3', pointVal: 3 },
+              { label: 'WORM FISH SHINY/MUTASI', res: 'WORM FISH SHINY/MUTASI', pts: '+3', pointVal: 3 },
+              { label: 'WORM FISH BIG SHINY', res: 'WORM FISH BIG SHINY', pts: '+4', pointVal: 4 },
+              { label: 'WORM FISH BIG MUTASI SHINY', res: 'WORM FISH BIG MUTASI SHINY', pts: '+5', pointVal: 5 }
+            );
+          }
+
+          if (this.locationSpecificFish[this.state.pointRushLocation]) {
+            this.locationSpecificFish[this.state.pointRushLocation].forEach(f => {
+              buttons.push({ label: f.label, res: f.label, pts: f.pts, pointVal: f.val });
+            });
+          }
+
+        } else if (this.state.mode === 'MEGALODON') {
+          buttons.push(
+            { label: 'MEGALODON', res: 'MEGALODON', pts: '+4', pointVal: 4 },
+            { label: 'MEGALODON MUTASI', res: 'MEGALODON MUTASI', pts: '+5', pointVal: 5 },
+            { label: 'MEGALODON BIG / SHINY', res: 'MEGALODON BIG/SHINY', pts: '+5', pointVal: 5 },
+            { label: 'MEGALODON BIG SHINY', res: 'MEGALODON BIG SHINY', pts: '+6', pointVal: 6 },
+            { label: 'MEGALODON BIG MUTASI SHINY', res: 'MEGALODON BIG MUTASI SHINY', pts: '+7', pointVal: 7 }
+          );
+        } else if (this.state.mode === 'GLACIAL_SERPENT') {
+          buttons.push(
+            { label: 'GLACIAL SERPENT', res: 'GLACIAL SERPENT', pts: '+4', pointVal: 4 },
+            { label: 'GLACIAL SERPENT MUTASI', res: 'GLACIAL SERPENT MUTASI', pts: '+5', pointVal: 5 },
+            { label: 'GLACIAL SERPENT BIG / SHINY', res: 'GLACIAL SERPENT BIG/SHINY', pts: '+5', pointVal: 5 },
+            { label: 'GLACIAL SERPENT BIG SHINY', res: 'GLACIAL SERPENT BIG SHINY', pts: '+6', pointVal: 6 },
+            { label: 'GLACIAL SERPENT BIG MUTASI SHINY', res: 'GLACIAL SERPENT BIG MUTASI SHINY', pts: '+7', pointVal: 7 }
+          );
+        } else if (this.state.mode === 'DARK_MEGALODON') {
+          buttons.push(
+            { label: 'DARK MEGALODON', res: 'DARK MEGALODON', pts: '+4', pointVal: 4 },
+            { label: 'DARK MEGALODON MUTASI', res: 'DARK MEGALODON MUTASI', pts: '+5', pointVal: 5 },
+            { label: 'DARK MEGALODON BIG / SHINY', res: 'DARK MEGALODON BIG/SHINY', pts: '+5', pointVal: 5 },
+            { label: 'DARK MEGALODON BIG SHINY', res: 'DARK MEGALODON BIG SHINY', pts: '+6', pointVal: 6 },
+            { label: 'DARK MEGALODON BIG MUTASI SHINY', res: 'DARK MEGALODON BIG MUTASI SHINY', pts: '+7', pointVal: 7 }
+          );
+        }
+
+        grid.innerHTML = buttons.map(b => `
+          <div class="catch-card" onclick="App.submitCatch('${b.res}', ${b.pointVal})">
+            <span style="font-weight:800; font-size:10px;">${b.label}</span>
+            <span style="font-weight:900; color:var(--cyan-accent); font-size:12px;">${b.pts}</span>
+          </div>
+        `).join('');
+      },
+
+      renderPeserta() {
+        let list = this.state.participants;
+        if (this.state.currentFilter !== 'ALL') list = list.filter(p => p.type === this.state.currentFilter);
+        const query = (document.getElementById('searchPeserta')?.value || '').toLowerCase();
+        if (query) list = list.filter(p => p.name.toLowerCase().includes(query));
+
+        document.getElementById('pesertaTbody').innerHTML = list.map((p, i) => `
+          <tr class="${p.id === this.state.selectedId ? 'selected' : ''}" onclick="App.selectParticipant('${p.id}', '${p.name}')">
+            <td>${i+1}</td>
+            <td class="avatar-cell">
+              <img src="${p.avatar}" class="user-avatar">
+              <b>${p.name}</b>
+            </td>
+            <td style="color:var(--text-muted);">${p.type}</td>
+            <td>
+              <span class="status-tag ${p.present ? 'tag-present' : 'tag-absent'}" onclick="event.stopPropagation(); App.toggleAttendance('${p.id}')">
+                ${p.present ? '✅ HADIR' : '❌ ALPHA'}
+              </span>
+            </td>
+            <td><span class="status-tag ${p.status === 'ACTIVE' ? 'tag-active' : 'tag-elim'}">${p.status}</span></td>
+            <td><b style="color:var(--cyan-accent);">${p.totalScore}</b></td>
+            <td style="text-align: center; display: flex; gap: 4px; justify-content: center;">
+              <button class="btn btn-dark btn-sm" onclick="App.showPlayerDetail('${p.id}')">INFO / FOTO</button>
+              <button class="btn btn-orange btn-sm" onclick="App.overrideScore('${p.id}')">POIN</button>
+              <button class="btn btn-red btn-sm" onclick="App.deletePeserta('${p.id}', event)">HAPUS</button>
+            </td>
+          </tr>
+        `).join('');
+      },
+
+      renderLeaderboard() {
+        const sorted = [...this.state.participants].sort((a,b) => b.totalScore - a.totalScore);
+        const top1 = sorted[0]; const top2 = sorted[1]; const top3 = sorted[2];
+        let podiumHtml = '';
+
+        if (top2) {
+          podiumHtml += `
+            <div class="podium-card rank-2">
+              <div class="podium-badge">#2</div>
+              <img src="${top2.avatar}" class="podium-avatar">
+              <div class="podium-name">${top2.name}</div>
+              <div class="podium-score">${top2.totalScore} Pts</div>
+              <div class="podium-prize">${this.state.prizes.rank2 || 'Hadiah Juara 2'}</div>
+            </div>`;
+        }
+        if (top1) {
+          podiumHtml += `
+            <div class="podium-card rank-1">
+              <div class="podium-badge">👑 #1</div>
+              <img src="${top1.avatar}" class="podium-avatar">
+              <div class="podium-name">${top1.name}</div>
+              <div class="podium-score">${top1.totalScore} Pts</div>
+              <div class="podium-prize">${this.state.prizes.rank1 || 'Hadiah Utama'}</div>
+            </div>`;
+        }
+        if (top3) {
+          podiumHtml += `
+            <div class="podium-card rank-3">
+              <div class="podium-badge">#3</div>
+              <img src="${top3.avatar}" class="podium-avatar">
+              <div class="podium-name">${top3.name}</div>
+              <div class="podium-score">${top3.totalScore} Pts</div>
+              <div class="podium-prize">${this.state.prizes.rank3 || 'Hadiah Juara 3'}</div>
+            </div>`;
+        }
+        document.getElementById('podiumContainer').innerHTML = podiumHtml || '<p style="color:var(--text-muted)">Belum ada data peserta</p>';
+
+        document.getElementById('leaderboardTbody').innerHTML = sorted.map((p, i) => {
+          let rankDisplay = `#${i+1}`;
+          if (i === 0) rankDisplay = `<span class="rank-badge rank-1-bg">1</span>`;
+          else if (i === 1) rankDisplay = `<span class="rank-badge rank-2-bg">2</span>`;
+          else if (i === 2) rankDisplay = `<span class="rank-badge rank-3-bg">3</span>`;
+
+          return `
+            <tr>
+              <td style="font-weight:800;">${rankDisplay}</td>
+              <td class="avatar-cell">
+                <img src="${p.avatar}" class="user-avatar">
+                <b>${p.name}</b>
+              </td>
+              <td><b style="color:var(--success); font-size:12px;">${p.totalScore}</b></td>
+              <td><span class="status-tag ${p.status === 'ACTIVE' ? 'tag-active' : 'tag-elim'}">${p.status}</span></td>
+              <td>
+                <button class="btn btn-dark btn-sm" onclick="App.showPlayerDetail('${p.id}')">STAT</button>
+                <button class="btn btn-orange btn-sm" onclick="App.overrideScore('${p.id}')">KOREKSI</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        document.getElementById('obsTbody').innerHTML = sorted.slice(0, 5).map((p, i) => `
+          <tr>
+            <td>#${i+1}</td>
+            <td class="avatar-cell">
+              <img src="${p.avatar}" class="user-avatar" style="width:24px; height:24px;">
+              <b>${p.name}</b>
+            </td>
+            <td><b style="color:var(--cyan-accent);">${p.totalScore}</b></td>
+          </tr>
+        `).join('');
+      },
+
+      renderHistory() {
+        document.getElementById('historyTbody').innerHTML = this.state.history.map(h => `
+          <tr>
+            <td style="color:var(--text-muted);">${h.time}</td>
+            <td class="avatar-cell">
+              <img src="${h.participantAvatar || DEFAULT_AVATAR + h.participantName}" class="user-avatar" style="width:24px; height:24px;">
+              <b>${h.participantName}</b>
+            </td>
+            <td>${h.mode} ${h.round ? `(R${h.round})` : ''} ${h.location ? `[${h.location}]` : ''}</td>
+            <td>${h.catchResult}</td>
+            <td><b style="color:var(--cyan-accent);">+${h.points}</b></td>
+            <td style="text-align:center;">
+              <button class="btn btn-red btn-sm" onclick="App.deleteLog('${h.id}')">✕ UNDO</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+    };
+
+    // LOGIKA AUCTION ENGINE
+    const AuctionApp = {
+      data: { itemName: "Ikan Secret Shiny Mutasi King", openBid: 50000, nextBid: 10000, bin: 250000, highestBid: 0, highestBidder: "" },
+      timerSec: 120, interval: null, isRunning: false, rekap: [],
+
+      setTimer() {
+        let mins = parseFloat(document.getElementById('aucTimerMins').value) || 2;
+        this.timerSec = Math.round(mins * 60);
+        this.updateTimerUI();
+      },
+      startTimer() {
+        if (this.isRunning) return;
+        this.isRunning = true;
+        this.interval = setInterval(() => {
+          if (this.timerSec > 0) { this.timerSec--; this.updateTimerUI(); }
+          else { this.pauseTimer(); this.soldCurrent(); }
+        }, 1000);
+      },
+      pauseTimer() { this.isRunning = false; clearInterval(this.interval); },
+      updateTimerUI() {
+        let m = Math.floor(this.timerSec / 60).toString().padStart(2, '0');
+        let s = (this.timerSec % 60).toString().padStart(2, '0');
+        document.getElementById('aucTimerDisplay').innerText = `⏱ ${m}:${s}`;
+      },
+      applyItem() {
+        this.data.itemName = document.getElementById('aucItemName').value;
+        this.data.openBid = parseFloat(document.getElementById('aucOpenBid').value) || 0;
+        this.data.nextBid = parseFloat(document.getElementById('aucNextBid').value) || 0;
+        this.data.bin = parseFloat(document.getElementById('aucBin').value) || 0;
+        this.resetRound();
+      },
+      resetRound() {
+        this.data.highestBid = 0;
+        this.data.highestBidder = "";
+        document.getElementById('aucSoldModal').classList.add('hidden');
+        this.setTimer();
+        this.updateUI();
+      },
+      parseChat() {
+        let user = document.getElementById('aucSimUser').value || 'Penonton';
+        let msg = document.getElementById('aucSimMsg').value.toLowerCase().trim();
+        if (!msg) return;
+
+        if (msg.includes('bin') || msg.includes('tebus')) {
+          this.data.highestBid = this.data.bin;
+          this.data.highestBidder = user;
+          this.triggerSold(user, this.data.bin, true);
+          document.getElementById('aucSimMsg').value = '';
+          return;
+        }
+
+        let text = msg.replace(/bid/g, '').replace(/o/g, '0').replace(/[^0-9k.,]/g, '');
+        let amt = 0;
+        if (text.includes('k')) {
+          let p = parseFloat(text.replace('k', '').replace(',', '.'));
+          if (!isNaN(p)) amt = p * 1000;
+        } else {
+          let p = parseFloat(text.replace(/\./g, '').replace(/,/g, ''));
+          if (!isNaN(p)) amt = (p > 0 && p < 100) ? p * 1000 : p;
+        }
+
+        let minReq = this.data.highestBid === 0 ? this.data.openBid : (this.data.highestBid + this.data.nextBid);
+        if (amt >= minReq) {
+          this.data.highestBid = amt;
+          this.data.highestBidder = user;
+          this.updateUI();
+        } else {
+          alert(`Bid kurang! Minimal Rp ${minReq.toLocaleString('id-ID')}`);
+        }
+        document.getElementById('aucSimMsg').value = '';
+      },
+      commitManual() {
+        let u = document.getElementById('aucManWinner').value || "Hamba Allah";
+        let a = parseFloat(document.getElementById('aucManAmount').value) || this.data.highestBid;
+        if (a <= 0) { alert("Nominal tidak valid!"); return; }
+        this.data.highestBidder = u;
+        this.data.highestBid = a;
+        this.triggerSold(u, a, false);
+        document.getElementById('aucManWinner').value = '';
+        document.getElementById('aucManAmount').value = '';
+      },
+      soldCurrent() {
+        if (this.data.highestBid > 0) {
+          this.triggerSold(this.data.highestBidder, this.data.highestBid, false);
+        } else {
+          alert("Belum ada bid masuk!");
+        }
+      },
+      triggerSold(winner, amount, isBin) {
+        this.pauseTimer();
+        document.getElementById('aucSoldTag').innerText = isBin ? "⚡ INSTANT BIN / TEBUS" : "🎉 ITEM SOLD / TERJUAL";
+        document.getElementById('aucSoldItem').innerText = this.data.itemName;
+        document.getElementById('aucSoldWinner').innerText = `@${winner}`;
+        document.getElementById('aucSoldAmount').innerText = `Rp ${amount.toLocaleString('id-ID')}`;
+        document.getElementById('aucSoldModal').classList.remove('hidden');
+
+        this.rekap.push({ item: this.data.itemName, winner: winner, amount: amount, isPaid: false });
+        this.renderRekap();
+        this.updateUI();
+      },
+      togglePay(idx, chk) { this.rekap[idx].isPaid = chk.checked; },
+      editItem(idx) {
+        let item = this.rekap[idx];
+        let nw = prompt("Koreksi Nama Pemenang:", item.winner);
+        if (nw === null) return;
+        let na = parseFloat(prompt("Koreksi Harga Akhir (Rp):", item.amount));
+        if (isNaN(na) || na <= 0) { alert("Nominal tidak valid!"); return; }
+        item.winner = nw.trim() || item.winner;
+        item.amount = na;
+        this.renderRekap();
+      },
+      renderRekap() {
+        let tbody = document.getElementById('aucTableBody');
+        document.getElementById('aucCount').innerText = `${this.rekap.length} Item`;
+        if (this.rekap.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#64748b; font-style:italic; padding:8px;">Belum ada rekap barang terjual.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = this.rekap.map((d, i) => `
+          <tr>
+            <td style="color:var(--text-muted); font-weight:bold;">${i+1}</td>
+            <td style="font-weight:700; color:var(--gold);">${d.item}</td>
+            <td style="color:var(--success); font-weight:800;">${d.winner}</td>
+            <td style="text-align:right; font-weight:900; color:var(--cyan-accent);">Rp ${d.amount.toLocaleString('id-ID')}</td>
+            <td style="text-align:center;"><input type="checkbox" ${d.isPaid ? 'checked' : ''} onchange="AuctionApp.togglePay(${i}, this)"></td>
+            <td style="text-align:center;"><button class="btn btn-amber btn-sm" style="padding:2px 6px; font-size:10px;" onclick="AuctionApp.editItem(${i})">Edit</button></td>
+          </tr>
+        `).join('');
+      },
+      updateUI() {
+        document.getElementById('aucObsItem').innerText = this.data.itemName;
+        document.getElementById('aucObsOB').innerText = `Rp ${this.data.openBid.toLocaleString('id-ID')}`;
+        document.getElementById('aucObsNext').innerText = `+Rp ${this.data.nextBid.toLocaleString('id-ID')}`;
+        document.getElementById('aucObsBin').innerText = `Rp ${this.data.bin.toLocaleString('id-ID')}`;
+        document.getElementById('aucObsWinner').innerText = this.data.highestBidder ? `@${this.data.highestBidder}` : "- Belum Ada Penawar -";
+        document.getElementById('aucObsAmount').innerText = this.data.highestBid > 0 ? `Rp ${this.data.highestBid.toLocaleString('id-ID')}` : "Rp 0";
+      }
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      App.init();
+      AuctionApp.setTimer();
+    });
+  </script>
 </body>
 </html>
