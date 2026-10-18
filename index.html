@@ -175,7 +175,7 @@
     .podium-prize { font-weight: 800; font-size: 9px; color: var(--gold); background: rgba(255, 183, 3, 0.1); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255, 183, 3, 0.3); margin-top: 4px; width: 90%; text-align: center; }
 
     /* MODE SELECTOR */
-    .mode-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .mode-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
     .mode-btn {
       background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 6px;
       padding: 10px 4px; text-align: center; cursor: pointer; font-weight: 800; color: var(--text-muted); transition: 0.2s;
@@ -215,6 +215,7 @@
       display: flex; flex-direction: column; gap: 3px; align-items: center;
     }
     .loc-btn .loc-name { font-weight: 900; font-size: 10px; }
+    .loc-btn .loc-fish { font-size: 8px; color: var(--cyan-accent); font-style: italic; }
     .loc-btn.active { background: rgba(0, 245, 212, 0.15); border-color: var(--cyan-accent); color: #fff; box-shadow: var(--cyan-glow); }
 
     /* SPINWHEEL BOX */
@@ -226,10 +227,13 @@
     .spinwheel-display.animating { animation: flashText 0.1s infinite alternate; }
     @keyframes flashText { from { opacity: 0.3; transform: scale(0.98); } to { opacity: 1; transform: scale(1.02); } }
 
-    /* DROPDOWN GRID SYSTEM */
-    .dropdown-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
-    .dropdown-box { background: #0c081d; border: 1px solid var(--card-border); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
-    .dropdown-box label { font-size: 9px; font-weight: 900; color: var(--cyan-accent); text-transform: uppercase; letter-spacing: 0.5px; }
+    /* CATCH GRID */
+    .catch-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .catch-card {
+      background: #110d2c; border: 1px solid var(--card-border); border-radius: 6px;
+      padding: 12px 10px; text-align: center; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; gap: 6px;
+    }
+    .catch-card:hover { border-color: var(--purple-main); box-shadow: var(--purple-glow); transform: translateY(-2px); }
 
     /* TABLES & FILTER */
     table { width: 100%; border-collapse: collapse; }
@@ -260,6 +264,29 @@
     }
     .input-field:focus { border-color: var(--purple-main); }
 
+    /* MODUL AUCTION STYLES */
+    .auction-container { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 1024px) { .auction-container { grid-template-columns: 4.5fr 7.5fr; } }
+
+    @keyframes goldPulseGlow {
+      0% { border-color: rgba(255, 183, 3, 0.4); box-shadow: 0 0 15px rgba(255, 183, 3, 0.2); }
+      50% { border-color: rgba(255, 209, 102, 0.9); box-shadow: 0 0 30px rgba(255, 183, 3, 0.6); }
+      100% { border-color: rgba(255, 183, 3, 0.4); box-shadow: 0 0 15px rgba(255, 183, 3, 0.2); }
+    }
+    .obs-auction-box {
+      background: radial-gradient(circle at 50% 30%, #181524 0%, #0b0a12 70%, #050508 100%);
+      border: 3px solid var(--gold); border-radius: 18px; padding: 20px;
+      aspect-ratio: 16/9; display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden; animation: goldPulseGlow 2.5s infinite ease-in-out;
+    }
+    .sold-modal-overlay {
+      position: absolute; inset: 0; background: rgba(3, 3, 5, 0.96); backdrop-filter: blur(12px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 20px; text-align: center; z-index: 50; border: 4px solid var(--success);
+    }
+    .sold-modal-overlay.hidden { display: none; }
+    .auction-table-box { background: #070512; border: 1px solid var(--card-border); border-radius: 8px; max-height: 140px; overflow-y: auto; }
+
     /* MODAL POPUP GENERAL */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -271,7 +298,7 @@
       width: 450px; max-width: 90%; padding: 20px; box-shadow: var(--purple-glow);
     }
 
-    /* WINNER ANNOUNCEMENT MODAL */
+    /* WINNER ANNOUNCEMENT MODAL - REVISED HIGH VISIBILITY */
     .winner-modal-card {
       background: linear-gradient(135deg, #130a24 0%, #06030e 100%);
       border: 3px solid var(--gold); border-radius: 20px;
@@ -363,7 +390,9 @@
       <div class="side-nav" onclick="App.switchView('mode-timer', this)">Mode & Round</div>
       <div class="side-nav" onclick="App.switchView('peserta', this)">Peserta & Absensi</div>
       <div class="side-nav" onclick="App.switchView('tangkapan', this)">Hasil Tangkapan</div>
+      <div class="side-nav" onclick="App.switchView('leaderboard', this)">Leaderboard & Podium</div>
       <div class="side-nav" onclick="App.switchView('hadiah-sponsor', this)">Hadiah & Sponsor</div>
+      <div class="side-nav" onclick="App.switchView('auction', this)" style="color:var(--gold); font-weight:900;">🎰 Live Auction (Siipa Store)</div>
       <div class="side-nav" onclick="App.switchView('log', this)">Log / Riwayat & Undo</div>
       <div class="side-nav" onclick="App.switchView('pengaturan', this)">Backup & Export</div>
     </aside>
@@ -409,7 +438,7 @@
       </div>
 
       <!-- SEKSI: PODIUM JUARA TOP 3 -->
-      <div class="card view-section view-dashboard no-obs">
+      <div class="card view-section view-dashboard view-leaderboard no-obs">
         <div class="card-head">🏆 PODIUM KLASEMEN SEMENTARA & HADIAH</div>
         <div class="podium-container" id="podiumContainer"></div>
       </div>
@@ -421,13 +450,14 @@
           <div class="mode-btn" id="m-SURVIVAL" onclick="App.changeMode('SURVIVAL')">SURVIVAL</div>
           <div class="mode-btn" id="m-MEGALODON" onclick="App.changeMode('MEGALODON')">MEGALODON</div>
           <div class="mode-btn" id="m-GLACIAL_SERPENT" onclick="App.changeMode('GLACIAL_SERPENT')">GLACIAL SERPENT</div>
+          <div class="mode-btn" id="m-DARK_MEGALODON" onclick="App.changeMode('DARK_MEGALODON')">DARK MEGALODON</div>
           <div class="mode-btn" id="m-POINT_RUSH" onclick="App.changeMode('POINT_RUSH')">POINT RUSH</div>
         </div>
       </div>
 
       <!-- SEKSI: POINT RUSH CONTROL & SPINWHEEL -->
       <div class="card hidden view-section view-dashboard view-mode-timer no-obs" id="pointRushCard">
-        <div class="card-head">POINT RUSH — SPINWHEEL ACAK TEMPAT (31 LOKASI)</div>
+        <div class="card-head">POINT RUSH — SPINWHEEL ACAK TEMPAT (30 LOKASI)</div>
         <div class="spinwheel-box">
           <div>
             <div style="color:var(--text-muted); font-weight:800; font-size:9px;">LOKASI AKTIF HASIL SPINWHEEL:</div>
@@ -446,13 +476,146 @@
         <button class="btn btn-purple" style="width: 100%; margin-top: 4px;" onclick="App.nextRound()">NEXT ROUND (ELIMINASI OTOMATIS)</button>
       </div>
 
-      <!-- SEKSI: HASIL TANGKAPAN DENGAN SISTEM DROPDOWN RAPI ALL MAPS -->
+      <!-- SEKSI: HASIL TANGKAPAN -->
       <div class="card view-section view-dashboard view-tangkapan no-obs">
         <div class="card-head">
-          <span>INPUT HASIL TANGKAPAN (ALL DROPDOWN SYSTEM)</span>
+          <span>INPUT HASIL TANGKAPAN</span>
           <span id="selectedLabel" style="color:var(--cyan-accent); font-size:10px; font-weight:800;">PILIH PESERTA DI TABEL DAHULU</span>
         </div>
-        <div id="dropdownWrapper" class="dropdown-container"></div>
+        <div class="catch-grid" id="catchGrid"></div>
+      </div>
+
+      <!-- SEKSI: LIVE AUCTION ENGINE (SIIPA STORE) -->
+      <div class="card view-section view-auction no-obs hidden">
+        <div class="card-head" style="color: var(--gold);">🎰 SIIPA STORE - LIVE AUCTION ENGINE (LEDGER & OBS OVERLAY)</div>
+        <div class="auction-container">
+          
+          <div style="background:#070512; border:1px solid rgba(255,183,3,0.3); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:10px;">
+            <div style="font-size: 0.8rem; font-weight: 900; color: var(--gold); border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">🎛️ PANEL KONTROL LELANG SIIPA</div>
+            
+            <div style="display:flex; flex-direction:column; gap:3px;">
+              <label style="font-size:0.65rem; color:var(--text-muted); font-weight:800;">Nama Barang Lelang</label>
+              <input type="text" id="aucItemName" class="input-field" value="Ikan Secret Shiny Mutasi King" style="color:var(--gold); font-weight:800;">
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+              <div>
+                <label style="font-size:0.65rem; color:var(--text-muted);">Open Bid (OB)</label>
+                <input type="number" id="aucOpenBid" class="input-field" value="50000">
+              </div>
+              <div>
+                <label style="font-size:0.65rem; color:var(--text-muted);">Next Step</label>
+                <input type="number" id="aucNextBid" class="input-field" value="10000">
+              </div>
+              <div>
+                <label style="font-size:0.65rem; color:var(--text-muted);">BIN / Tebus</label>
+                <input type="number" id="aucBin" class="input-field" value="250000">
+              </div>
+            </div>
+
+            <div style="display:flex; gap:6px;">
+              <div style="flex:1;">
+                <label style="font-size:0.65rem; color:var(--text-muted);">Durasi Timer (Menit)</label>
+                <input type="number" id="aucTimerMins" class="input-field" value="2" step="0.5">
+              </div>
+              <div style="display:flex; align-items:flex-end;">
+                <button class="btn btn-dark btn-sm" onclick="AuctionApp.setTimer()">⏱️ Set</button>
+              </div>
+            </div>
+
+            <button class="btn btn-gold" onclick="AuctionApp.applyItem()">🚀 GANTI ITEM & MULAI LELANG</button>
+
+            <div style="background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.06); padding:8px; border-radius:8px; display:flex; flex-direction:column; gap:6px;">
+              <label style="font-size:0.65rem; color:var(--cyan-accent); font-weight:800;">💬 FAST PARSER CHAT (Ketik 'bin', '50k', dll)</label>
+              <div style="display:grid; grid-template-columns: 1fr 1.5fr; gap:4px;">
+                <input type="text" id="aucSimUser" class="input-field" value="Raka_Sultan" placeholder="Username">
+                <input type="text" id="aucSimMsg" class="input-field" placeholder="Ketik pesan..." onkeypress="if(event.key==='Enter') AuctionApp.parseChat()">
+              </div>
+              <button class="btn btn-purple btn-sm" onclick="AuctionApp.parseChat()">⚡ PROSES CHAT</button>
+            </div>
+
+            <div style="background:rgba(0,0,0,0.4); border:1px solid rgba(56,176,0,0.3); padding:8px; border-radius:8px; display:flex; flex-direction:column; gap:6px;">
+              <label style="font-size:0.65rem; color:var(--success); font-weight:800;">🏆 MANUAL COMMIT PEMENANG (SOLD)</label>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:4px;">
+                <input type="text" id="aucManWinner" class="input-field" placeholder="Nama Pemenang">
+                <input type="number" id="aucManAmount" class="input-field" placeholder="Nominal Rp">
+              </div>
+              <button class="btn btn-green btn-sm" onclick="AuctionApp.commitManual()">✅ SAHKAN & REKAP</button>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+              <button class="btn btn-green btn-sm" onclick="AuctionApp.startTimer()">▶ Start</button>
+              <button class="btn btn-orange btn-sm" onclick="AuctionApp.pauseTimer()">⏸ Pause</button>
+              <button class="btn btn-red btn-sm" onclick="AuctionApp.soldCurrent()">🛑 SOLD</button>
+            </div>
+            <button class="btn btn-dark btn-sm" onclick="AuctionApp.resetRound()">🔄 RESET ROUND</button>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="font-size: 0.7rem; font-weight: 800; color: var(--text-muted);">📺 OBS OVERLAY PREVIEW (SIIPA STORE)</div>
+            
+            <div class="obs-auction-box">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="background:rgba(255,183,3,0.2); border:1px solid var(--gold); color:var(--gold); padding:3px 10px; border-radius:99px; font-size:0.65rem; font-weight:900;">🔥 SIIPA STORE OFFICIAL</span>
+                <span id="aucTimerDisplay" style="background:rgba(247,37,133,0.2); border:1px solid var(--danger); color:#ff6b9d; padding:3px 10px; border-radius:99px; font-family:monospace; font-weight:900;">⏱ 02:00</span>
+              </div>
+
+              <div>
+                <div style="font-size:0.6rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Sedang Dilelang:</div>
+                <div id="aucObsItem" style="font-size:1.4rem; font-weight:900; color:var(--gold); text-shadow:0 2px 4px rgba(0,0,0,0.5);">Ikan Secret Shiny Mutasi King</div>
+                <div style="display:flex; gap:12px; font-size:0.7rem; font-weight:700; color:#cbd5e1; margin-top:3px;">
+                  <span>OB: <b id="aucObsOB" style="color:#fff;">Rp 50.000</b></span>
+                  <span>Next: <b id="aucObsNext" style="color:var(--cyan-accent);">+Rp 10.000</b></span>
+                  <span>BIN: <b id="aucObsBin" style="color:#f72585;">Rp 250.000</b></span>
+                </div>
+              </div>
+
+              <div style="background:linear-gradient(135deg, rgba(56,176,0,0.2), rgba(4,120,87,0.3)); border:2px solid var(--success); border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-size:0.55rem; color:var(--success); font-weight:800; text-transform:uppercase;">Highest Bidder / Pemenang</div>
+                  <div id="aucObsWinner" style="font-size:1.1rem; font-weight:900; color:var(--success);">- Belum Ada Penawar -</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:0.55rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Nominal</div>
+                  <div id="aucObsAmount" style="font-size:1.3rem; font-weight:900; color:var(--gold);">Rp 0</div>
+                </div>
+              </div>
+
+              <div id="aucSoldModal" class="sold-modal-overlay hidden">
+                <span id="aucSoldTag" style="background:rgba(255,183,3,0.2); border:1px solid var(--gold); color:var(--gold); padding:3px 12px; border-radius:99px; font-size:0.7rem; font-weight:900;">🎉 ITEM SOLD / TERJUAL</span>
+                <div id="aucSoldItem" style="font-size:1.3rem; font-weight:900; color:var(--gold); margin-top:6px;">Nama Barang</div>
+                <div id="aucSoldWinner" style="font-size:1.8rem; font-weight:900; color:var(--success); margin:2px 0;">@Username</div>
+                <div id="aucSoldAmount" style="font-size:1.5rem; font-weight:900; color:var(--cyan-accent);">Rp 0</div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:0.65rem; font-weight:800; color:var(--text-muted); margin-bottom:3px;">
+                <span>📋 REKAP PEMENANG LELANG SIIPA STORE</span>
+                <span id="aucCount" style="color:var(--gold);">0 Item</span>
+              </div>
+              <div class="auction-table-box">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Barang</th>
+                      <th>Pemenang</th>
+                      <th style="text-align:right;">Harga</th>
+                      <th style="text-align:center;">Lunas?</th>
+                      <th style="text-align:center;">Edit</th>
+                    </tr>
+                  </thead>
+                  <tbody id="aucTableBody">
+                    <tr><td colspan="6" style="text-align:center; color:#64748b; font-style:italic; padding:8px;">Belum ada rekap barang terjual.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
       </div>
 
       <!-- SEKSI: MANAJEMEN HADIAH & SPONSOR -->
@@ -539,9 +702,9 @@
         </div>
       </div>
 
-      <!-- SEKSI: LEADERBOARD & KLASEMEN (DI BAWAH LIST PESERTA, MUDAH DI-SCROLL) -->
-      <div class="card view-section view-dashboard no-obs" id="leaderboardSection">
-        <div class="card-head">LEADERBOARD KLASEMEN PERTANDINGAN</div>
+      <!-- SEKSI: TABEL LEADERBOARD -->
+      <div class="card view-section view-dashboard view-leaderboard no-obs hidden">
+        <div class="card-head">LEADERBOARD PERTANDINGAN</div>
         <table>
           <thead>
             <tr><th>Rank</th><th>Peserta</th><th>Total Poin</th><th>Status</th><th>Detail & Override</th></tr>
@@ -612,7 +775,7 @@
     </div>
   </div>
 
-  <!-- MODAL SELEBRASI UMUMKAN PEMENANG -->
+  <!-- MODAL SELEBRASI UMUMKAN PEMENANG DENGAN SIIPA STORE & HIGH VISIBILITY -->
   <div class="modal-overlay hidden" id="winnerModal">
     <div class="winner-modal-card">
       <div style="display: inline-block; background: rgba(255,183,3,0.15); border: 2px solid var(--gold); color: var(--gold); padding: 5px 16px; border-radius: 99px; font-weight: 900; font-size: 11px; margin-bottom: 8px; box-shadow: 0 0 12px rgba(255,183,3,0.4);">
@@ -686,7 +849,7 @@
       state: {
         activeView: 'dashboard', mode: 'SURVIVAL', obsMode: false, currentTheme: '',
         timer: { isRunning: false, durationMinutes: 15, secondsLeft: 900, intervalId: null },
-        survival: { round: 1 }, pointRushLocation: 'COPPER CANYON', selectedId: null, currentFilter: 'ALL',
+        survival: { round: 1 }, pointRushLocation: 'FISHERMAN ISLAND', selectedId: null, currentFilter: 'ALL',
         prizes: { rank1: 'Rp 5.000.000 + Trophy', rank2: 'Rp 2.500.000 + Medali', rank3: 'Rp 1.000.000 + Sertifikat' },
         sponsors: [
           { id: 'sp_siipa', name: 'SIIPA STORE (MAIN SPONSOR)', logo: 'https://api.dicebear.com/7.x/identicon/svg?seed=SIIPA' }
@@ -700,28 +863,53 @@
       },
 
       pointRushLocations: [
-        "COPPER CANYON", "ANCIENT JUNGLE", "THRONE ROOM", "UNDERWATER CITY",
         "FISHERMAN ISLAND", "OCEAN", "KOHANA", "KOHANA VOLCANO", "VOLCANIC CAVERN",
         "CORAL REEFS", "ESOTERIC DEPTHS", "TROPICAL GROVE", "CRATER ISLAND", "SISYPUS STATUE",
-        "TREASURE ROOM", "PLANETARY OBSERVATORY", "LAVA BASIN", "UNDERGROUND CELLAR",
-        "SACRED TEMPLE", "STINGRAY SHORES", "COPPER CANYON MINES",
+        "TREASURE ROOM", "PLANETARY OBSERVATORY", "LAVA BASIN", "ANCIENT JUNGLE", "UNDERGROUND CELLAR",
+        "SACRED TEMPLE", "STINGRAY SHORES", "COPPER CANYON", "COPPER CANYON MINES", "UNDERWATER CITY",
         "SEWERS", "KOHANA LAB", "ANCIENT RUIN", "PIRATE COVE", "PIRATE TREASURE ROOM",
-        "CRYSTAL DEPTHS", "GLOOMCAP GROTTO", "ELEMENTAL ISLAND", "WEATHER MACHINE",
-        "HALLOWEEN EVE"
+        "CRYSTAL DEPTHS", "GLOOMCAP GROTTO", "ELEMENTAL ISLAND", "THRONE ROOM", "WEATHER MACHINE"
       ],
 
-      mitosMaps: ["COPPER CANYON", "ANCIENT JUNGLE", "THRONE ROOM", "UNDERWATER CITY", "SEWERS"],
-
-      locationSpecificFishNames: {
-        "ANCIENT JUNGLE": ["RAGNAREX", "THUNDERZILLA"],
-        "KOHANA": ["EVERBLOOM"],
-        "COPPER CANYON MINES": ["CERULEAN DRAGON"],
-        "UNDERWATER CITY": ["SEA EATER", "FLOURIVANE"],
-        "MARIANA TRENCH": ["TRENCH WARDEN"],
-        "THRONE ROOM": ["HYDRA", "OVERLORD HYDRA"],
-        "GLOOMCAP GROTTO": ["CRIMSON DREADTUSK"],
-        "CRATER ISLAND": ["FB 100KG++", "FB MAXTON", "CRYSTALLINE BEHEMOTH"],
-        "SEWERS": ["SEA EATER", "FLOURIVANE"]
+      locationSpecificFish: {
+        "ANCIENT JUNGLE": [
+          { label: "RAGNAREX", pts: "+10", val: 10 },
+          { label: "RAGNAREX MUTASI", pts: "+15", val: 15 },
+          { label: "THUNDERZILLA", pts: "+10", val: 10 },
+          { label: "THUNDERZILLA MUTASI", pts: "+15", val: 15 }
+        ],
+        "KOHANA": [
+          { label: "EVERBLOOM", pts: "+10", val: 10 },
+          { label: "EVERBLOOM MUTASI", pts: "+15", val: 15 }
+        ],
+        "COPPER CANYON MINES": [
+          { label: "CERULEAN DRAGON", pts: "+10", val: 10 },
+          { label: "CERULEAN DRAGON MUTASI", pts: "+15", val: 15 }
+        ],
+        "UNDERWATER CITY": [
+          { label: "SEA EATER", pts: "+10", val: 10 },
+          { label: "SEA EATER MUTASI", pts: "+15", val: 15 },
+          { label: "FLOURIVANE", pts: "+10", val: 10 },
+          { label: "FLOURIVANE MUTASI", pts: "+15", val: 15 }
+        ],
+        "MARIANA TRENCH": [
+          { label: "TRENCH WARDEN", pts: "+10", val: 10 },
+          { label: "TRENCH WARDEN MUTASI", pts: "+15", val: 15 }
+        ],
+        "THRONE ROOM": [
+          { label: "HYDRA", pts: "+10", val: 10 },
+          { label: "HYDRA MUTASI", pts: "+15", val: 15 },
+          { label: "OVERLORD HYDRA", pts: "+10", val: 10 },
+          { label: "OVERLORD HYDRA MUTASI", pts: "+15", val: 15 }
+        ],
+        "GLOOMCAP GROTTO": [
+          { label: "CRIMSON DREADTUSK", pts: "+10", val: 10 },
+          { label: "CRIMSON DREADTUSK MUTASI", pts: "+15", val: 15 }
+        ],
+        "CRATER": [
+          { label: "CRYSTALLINE BEHEMOTH", pts: "+10", val: 10 },
+          { label: "CRYSTALLINE BEHEMOTH MUTASI", pts: "+15", val: 15 }
+        ]
       },
 
       init() {
@@ -758,7 +946,7 @@
             this.state.timer.durationMinutes = parsed.timer?.durationMinutes || 15;
             this.state.timer.secondsLeft = parsed.timer?.secondsLeft || 900;
             this.state.survival = parsed.survival || this.state.survival;
-            this.state.pointRushLocation = parsed.pointRushLocation || 'COPPER CANYON';
+            this.state.pointRushLocation = parsed.pointRushLocation || 'FISHERMAN ISLAND';
             this.state.prizes = parsed.prizes || this.state.prizes;
             this.state.sponsors = parsed.sponsors || this.state.sponsors;
             this.state.participants = parsed.participants || this.state.participants;
@@ -778,9 +966,6 @@
           if (sec.id === 'survivalCard' && this.state.mode !== 'SURVIVAL') return;
           sec.classList.remove('hidden');
         });
-        if(viewName === 'dashboard') {
-          document.getElementById('leaderboardSection').classList.remove('hidden');
-        }
       },
 
       toggleOBSMode() {
@@ -1033,19 +1218,6 @@
         AudioEngine.playPop(); this.saveStorage(); this.renderAll();
       },
 
-      submitDropdownCatch(catSelectId, valSelectId) {
-        const catSel = document.getElementById(catSelectId);
-        const valSel = document.getElementById(valSelectId);
-        if (!catSel || !valSel) return;
-
-        const categoryName = catSel.value;
-        const selectedOpt = valSel.options[valSel.selectedIndex];
-        const catchName = selectedOpt.text.split(' (')[0];
-        const points = parseInt(selectedOpt.value) || 0;
-
-        this.submitCatch(`[${categoryName}] ${catchName}`, points);
-      },
-
       deleteLog(logId) {
         const itemIndex = this.state.history.findIndex(h => h.id === logId);
         if (itemIndex === -1) return;
@@ -1074,7 +1246,7 @@
         if (this.state.mode !== 'SURVIVAL') return;
         this.state.participants.forEach(p => {
           if (p.status === 'ACTIVE') {
-            const hasPassed = (p.roundCatches || []).some(c => c.includes('SECRET') || c.includes('MITOS') || c.includes('FORGOTTEN') || c.includes('RAGNAREX') || c.includes('HYDRA') || c.includes('EVERBLOOM'));
+            const hasPassed = (p.roundCatches || []).some(c => c.includes('SECRET') || c === 'MITOS');
             if (!hasPassed) p.status = 'ELIMINATED';
             p.roundCatches = [];
           }
@@ -1235,11 +1407,10 @@
         if (this.state.mode === 'POINT_RUSH') {
           document.getElementById('spinwheelDisplay').innerText = this.state.pointRushLocation;
           document.getElementById('pointRushLocationGrid').innerHTML = this.pointRushLocations.map(loc => {
-            const hasMitos = this.mitosMaps.includes(loc) ? ` <span style="font-size:7px; color:var(--gold);">[🔥 MITOS]</span>` : '';
-            const hasFish = this.locationSpecificFishNames[loc] ? ` <span style="font-size:7px; color:var(--cyan-accent);">[🐟 FG]</span>` : '';
+            const hasFish = this.locationSpecificFish[loc] ? ` <span style="font-size:7px; color:var(--cyan-accent);">[🐟 FORGOTTEN]</span>` : '';
             return `
               <div class="loc-btn ${this.state.pointRushLocation === loc ? 'active' : ''}" onclick="App.setPointRushLocation('${loc}')">
-                <span class="loc-name">${loc}${hasMitos}${hasFish}</span>
+                <span class="loc-name">${loc}${hasFish}</span>
               </div>
             `;
           }).join('');
@@ -1247,188 +1418,91 @@
       },
 
       renderCatchGrid() {
-        const dropdownWrapper = document.getElementById('dropdownWrapper');
-        let currLoc = this.state.pointRushLocation;
-        let isMitosActive = this.state.mode === 'POINT_RUSH' && this.mitosMaps.includes(currLoc);
+        const grid = document.getElementById('catchGrid');
+        let buttons = [];
 
-        let secretBaseVal = isMitosActive ? 2 : 1;
-        let secretBaseText = isMitosActive ? "Secret Basic (+2)" : "Secret Basic (+1)";
-        let secretMutasiText = isMitosActive ? "Secret Big / Mutasi / Shiny (+3)" : "Secret Big / Mutasi / Shiny (+2)";
-        let secretBigShinyText = isMitosActive ? "Secret Big+Shiny / Big+Mutasi (+4)" : "Secret Big+Shiny / Big+Mutasi (+3)";
-        let secretMaxText = isMitosActive ? "Secret Big Shiny Mutasi (+5)" : "Secret Big Shiny Mutasi (+4)";
-
-        let dropdownHtml = `
-          <div class="dropdown-box">
-            <label>Kategori Secret (All Maps):</label>
-            <select id="dropSecretVal" class="input-field" style="width:100%;">
-              <option value="${secretBaseVal}">${secretBaseText}</option>
-              <option value="${secretBaseVal + 1}">${secretMutasiText}</option>
-              <option value="${secretBaseVal + 2}">${secretBigShinyText}</option>
-              <option value="${secretBaseVal + 3}">${secretMaxText}</option>
-            </select>
-            <button class="btn btn-purple btn-sm" style="margin-top:6px;" onclick="App.submitDropdownCatch('dropSecretCat', 'dropSecretVal')">Kirim Poin Secret</button>
-          </div>
-          <input type="hidden" id="dropSecretCat" value="SECRET">
-        `;
-
-        if (this.state.mode !== 'SURVIVAL' && this.state.mode !== 'POINT_RUSH') {
-          let bossName = this.state.mode.replace('_', ' ');
-          dropdownHtml += `
-            <div class="dropdown-box">
-              <label>Kategori ${bossName}:</label>
-              <select id="dropBossVal" class="input-field" style="width:100%;">
-                <option value="4">${bossName} Basic (+4)</option>
-                <option value="5">${bossName} Mutasi / Big / Shiny (+5)</option>
-                <option value="6">${bossName} Big Shiny (+6)</option>
-                <option value="7">${bossName} Big Shiny Mutasi (+7)</option>
-              </select>
-              <button class="btn btn-gold btn-sm" style="margin-top:6px;" onclick="App.submitDropdownCatch('dropBossCat', 'dropBossVal')">Kirim Poin ${bossName}</button>
-            </div>
-            <input type="hidden" id="dropBossCat" value="${bossName}">
-          `;
+        if (this.state.mode !== 'SURVIVAL') {
+          buttons = [
+            { label: 'SECRET', res: 'SECRET', pts: '+1', pointVal: 1 },
+            { label: 'SECRET BIG', res: 'SECRET BIG', pts: '+2', pointVal: 2 },
+            { label: 'SECRET MUTASI', res: 'SECRET MUTASI', pts: '+2', pointVal: 2 },
+            { label: 'SECRET BIG + MUTASI', res: 'SECRET BIG + MUTASI', pts: '+3', pointVal: 3 },
+            { label: 'SECRET SHINY', res: 'SECRET SHINY', pts: '+2', pointVal: 2 },
+            { label: 'SECRET BIG SHINY', res: 'SECRET BIG SHINY', pts: '+3', pointVal: 3 },
+            { label: 'SECRET BIG SHINY MUTASI', res: 'SECRET BIG SHINY MUTASI', pts: '+4', pointVal: 4 }
+          ];
         }
 
-        if (isMitosActive) {
-          dropdownHtml += `
-            <div class="dropdown-box">
-              <label>Kategori Mitos (${currLoc}):</label>
-              <select id="dropMitosVal" class="input-field" style="width:100%;">
-                <option value="1">Mitos Basic (+1)</option>
-                <option value="2">Mitos Mutasi (+2)</option>
-                <option value="3">Mitos Big Shiny / Mutasi (+3)</option>
-                <option value="4">Mitos Big Shiny Mutasi (+4)</option>
-              </select>
-              <button class="btn btn-gold btn-sm" style="margin-top:6px;" onclick="App.submitDropdownCatch('dropMitosCat', 'dropMitosVal')">Kirim Poin Mitos</button>
-            </div>
-            <input type="hidden" id="dropMitosCat" value="MITOS">
-          `;
-
-          if (currLoc === 'COPPER CANYON') {
-            dropdownHtml += `
-              <div class="dropdown-box">
-                <label>Pilih Core (Copper Canyon):</label>
-                <select id="dropCoreVal" class="input-field" style="width:100%;">
-                  <option value="3">Core Basic (+3)</option>
-                  <option value="4">Core Mutasi / Big / Shiny (+4)</option>
-                  <option value="5">Core Big+Shiny / Big+Mutasi (+5)</option>
-                  <option value="6">Core Big Shiny Mutasi (+6)</option>
-                </select>
-                <button class="btn btn-gold btn-sm" style="margin-top:6px;" onclick="App.submitDropdownCatch('dropCoreCat', 'dropCoreVal')">Kirim Poin Core</button>
-              </div>
-              <input type="hidden" id="dropCoreCat" value="SECRET CORE">
-            `;
+        if (this.state.mode === 'SURVIVAL') {
+          buttons = [
+            { label: 'MITOS', res: 'MITOS', pts: '+0', pointVal: 0 },
+            { label: 'SECRET', res: 'SECRET', pts: '+1', pointVal: 1 },
+            { label: 'SECRET BIG', res: 'SECRET BIG', pts: '+2', pointVal: 2 },
+            { label: 'SECRET MUTASI', res: 'SECRET MUTASI', pts: '+2', pointVal: 2 },
+            { label: 'SECRET BIG + MUTASI', res: 'SECRET BIG + MUTASI', pts: '+3', pointVal: 3 }
+          ];
+        } else if (this.state.mode === 'POINT_RUSH') {
+          if (this.state.pointRushLocation === 'CRATER ISLAND') {
+            buttons.push(
+              { label: 'FB 100KG++', res: 'FB 100KG++', pts: '+4', pointVal: 4 },
+              { label: 'FB MAXTON', res: 'FB MAXTON', pts: '+5', pointVal: 5 },
+              { label: 'FB MAXTON MUTASI', res: 'FB MAXTON MUTASI', pts: '+6', pointVal: 6 }
+            );
+          } else if (this.state.pointRushLocation === 'SISYPUS STATUE') {
+            buttons.push(
+              { label: 'PELAGON', res: 'PELAGON', pts: '+2', pointVal: 2 },
+              { label: 'PELAGON BIG', res: 'PELAGON BIG', pts: '+3', pointVal: 3 },
+              { label: 'PELAGON BIG MUTASI', res: 'PELAGON BIG MUTASI', pts: '+4', pointVal: 4 },
+              { label: 'PELAGON BIG MUTASI SHINY', res: 'PELAGON BIG MUTASI SHINY', pts: '+5', pointVal: 5 }
+            );
+          } else if (this.state.pointRushLocation === 'WEATHER MACHINE') {
+            buttons.push(
+              { label: 'WORM FISH', res: 'WORM FISH', pts: '+2', pointVal: 2 },
+              { label: 'WORM FISH BIG', res: 'WORM FISH BIG', pts: '+3', pointVal: 3 },
+              { label: 'WORM FISH SHINY/MUTASI', res: 'WORM FISH SHINY/MUTASI', pts: '+3', pointVal: 3 },
+              { label: 'WORM FISH BIG SHINY', res: 'WORM FISH BIG SHINY', pts: '+4', pointVal: 4 },
+              { label: 'WORM FISH BIG MUTASI SHINY', res: 'WORM FISH BIG MUTASI SHINY', pts: '+5', pointVal: 5 }
+            );
           }
+
+          if (this.locationSpecificFish[this.state.pointRushLocation]) {
+            this.locationSpecificFish[this.state.pointRushLocation].forEach(f => {
+              buttons.push({ label: f.label, res: f.label, pts: f.pts, pointVal: f.val });
+            });
+          }
+
+        } else if (this.state.mode === 'MEGALODON') {
+          buttons.push(
+            { label: 'MEGALODON', res: 'MEGALODON', pts: '+4', pointVal: 4 },
+            { label: 'MEGALODON MUTASI', res: 'MEGALODON MUTASI', pts: '+5', pointVal: 5 },
+            { label: 'MEGALODON BIG / SHINY', res: 'MEGALODON BIG/SHINY', pts: '+5', pointVal: 5 },
+            { label: 'MEGALODON BIG SHINY', res: 'MEGALODON BIG SHINY', pts: '+6', pointVal: 6 },
+            { label: 'MEGALODON BIG MUTASI SHINY', res: 'MEGALODON BIG MUTASI SHINY', pts: '+7', pointVal: 7 }
+          );
+        } else if (this.state.mode === 'GLACIAL_SERPENT') {
+          buttons.push(
+            { label: 'GLACIAL SERPENT', res: 'GLACIAL SERPENT', pts: '+4', pointVal: 4 },
+            { label: 'GLACIAL SERPENT MUTASI', res: 'GLACIAL SERPENT MUTASI', pts: '+5', pointVal: 5 },
+            { label: 'GLACIAL SERPENT BIG / SHINY', res: 'GLACIAL SERPENT BIG/SHINY', pts: '+5', pointVal: 5 },
+            { label: 'GLACIAL SERPENT BIG SHINY', res: 'GLACIAL SERPENT BIG SHINY', pts: '+6', pointVal: 6 },
+            { label: 'GLACIAL SERPENT BIG MUTASI SHINY', res: 'GLACIAL SERPENT BIG MUTASI SHINY', pts: '+7', pointVal: 7 }
+          );
+        } else if (this.state.mode === 'DARK_MEGALODON') {
+          buttons.push(
+            { label: 'DARK MEGALODON', res: 'DARK MEGALODON', pts: '+4', pointVal: 4 },
+            { label: 'DARK MEGALODON MUTASI', res: 'DARK MEGALODON MUTASI', pts: '+5', pointVal: 5 },
+            { label: 'DARK MEGALODON BIG / SHINY', res: 'DARK MEGALODON BIG/SHINY', pts: '+5', pointVal: 5 },
+            { label: 'DARK MEGALODON BIG SHINY', res: 'DARK MEGALODON BIG SHINY', pts: '+6', pointVal: 6 },
+            { label: 'DARK MEGALODON BIG MUTASI SHINY', res: 'DARK MEGALODON BIG MUTASI SHINY', pts: '+7', pointVal: 7 }
+          );
         }
 
-        if (this.state.mode === 'POINT_RUSH' && this.locationSpecificFishNames[currLoc]) {
-          this.locationSpecificFishNames[currLoc].forEach((fishName, idx) => {
-            dropdownHtml += `
-              <div class="dropdown-box">
-                <label>🐟 ${fishName} (${currLoc}):</label>
-                <select id="dropFishVal_${idx}" class="input-field" style="width:100%;">
-                  <option value="5">${fishName} Basic (+5)</option>
-                  <option value="6">${fishName} Mutasi / Big / Shiny (+6)</option>
-                  <option value="7">${fishName} Big + Mutasi / Shiny (+7)</option>
-                  <option value="8">${fishName} Big Shiny Mutasi (+8)</option>
-                </select>
-                <button class="btn btn-green btn-sm" style="margin-top:6px;" onclick="App.submitSpecificFishDropdown('${fishName}', 'dropFishVal_${idx}')">Kirim Poin ${fishName}</button>
-              </div>
-            `;
-          });
-        }
-
-        if (this.state.mode === 'POINT_RUSH' && currLoc === 'SISYPUS STATUE') {
-          dropdownHtml += `
-            <div class="dropdown-box">
-              <label>🐟 PELAGON (Sisypus Statue):</label>
-              <select id="dropPelagonVal" class="input-field" style="width:100%;">
-                <option value="2">Pelagon Basic (+2)</option>
-                <option value="3">Pelagon Mutasi / Big / Shiny (+3)</option>
-                <option value="4">Pelagon Big + Mutasi / Shiny (+4)</option>
-                <option value="5">Pelagon Big Shiny Mutasi (+5)</option>
-              </select>
-              <button class="btn btn-green btn-sm" style="margin-top:6px;" onclick="App.submitSpecificFishDropdown('PELAGON', 'dropPelagonVal')">Kirim Poin Pelagon</button>
-            </div>
-          `;
-        }
-
-        if (this.state.mode === 'POINT_RUSH' && currLoc === 'WEATHER MACHINE') {
-          dropdownHtml += `
-            <div class="dropdown-box">
-              <label>🐛 WORMFISH (Weather Machine):</label>
-              <select id="dropWormVal" class="input-field" style="width:100%;">
-                <option value="2">Wormfish Basic (+2)</option>
-                <option value="3">Wormfish Mutasi / Big / Shiny (+3)</option>
-                <option value="4">Wormfish Big + Mutasi / Shiny (+4)</option>
-                <option value="5">Wormfish Big Shiny Mutasi (+5)</option>
-              </select>
-              <button class="btn btn-green btn-sm" style="margin-top:6px;" onclick="App.submitSpecificFishDropdown('WORMFISH', 'dropWormVal')">Kirim Poin Wormfish</button>
-            </div>
-          `;
-        }
-
-        if (this.state.mode === 'POINT_RUSH' && currLoc === 'PLANETARY OBSERVATORY') {
-          dropdownHtml += `
-            <div class="dropdown-box">
-              <label>🦈 COSMIC SHARK (Planetary Observatory):</label>
-              <select id="dropCosmicVal" class="input-field" style="width:100%;">
-                <option value="2">Cosmic Shark Basic (+2)</option>
-                <option value="3">Cosmic Shark Mutasi / Big / Shiny (+3)</option>
-                <option value="4">Cosmic Shark Big + Mutasi / Shiny (+4)</option>
-                <option value="5">Cosmic Shark Big Shiny Mutasi (+5)</option>
-              </select>
-              <button class="btn btn-green btn-sm" style="margin-top:6px;" onclick="App.submitSpecificFishDropdown('COSMIC SHARK', 'dropCosmicVal')">Kirim Poin Cosmic Shark</button>
-            </div>
-          `;
-        }
-
-        /* ====== HALLOWEEN EVE: Mitos +1, Phantom Dead Shark +1, Sweetooth Gourd +2 (basic) ====== */
-        if (this.state.mode === 'POINT_RUSH' && currLoc === 'HALLOWEEN EVE') {
-          dropdownHtml += `
-            <div class="dropdown-box">
-              <label>🎃 Kategori Mitos (HALLOWEEN EVE):</label>
-              <select id="dropHalloweenMitosVal" class="input-field" style="width:100%;">
-                <option value="1">Mitos Basic (+1)</option>
-                <option value="2">Mitos Mutasi (+2)</option>
-                <option value="3">Mitos Big Shiny / Mutasi (+3)</option>
-                <option value="4">Mitos Big Shiny Mutasi (+4)</option>
-              </select>
-              <button class="btn btn-gold btn-sm" style="margin-top:6px;" onclick="App.submitDropdownCatch('dropHalloweenMitosCat', 'dropHalloweenMitosVal')">Kirim Poin Mitos</button>
-            </div>
-            <input type="hidden" id="dropHalloweenMitosCat" value="MITOS">
-          `;
-
-          [
-            { label: 'PHANTOM DEAD SHARK', icon: '👻', title: 'Phantom Dead Shark', id: 'dropPhantomVal', base: 1 },
-            { label: 'SWEETOOTH GOURD',    icon: '🍬', title: 'Sweetooth Gourd',    id: 'dropGourdVal',   base: 2 }
-          ].forEach(f => {
-            dropdownHtml += `
-              <div class="dropdown-box">
-                <label>${f.icon} ${f.label} (HALLOWEEN EVE):</label>
-                <select id="${f.id}" class="input-field" style="width:100%;">
-                  <option value="${f.base}">${f.title} Basic (+${f.base})</option>
-                  <option value="${f.base + 1}">${f.title} Mutasi / Big / Shiny (+${f.base + 1})</option>
-                  <option value="${f.base + 2}">${f.title} Big + Mutasi / Shiny (+${f.base + 2})</option>
-                  <option value="${f.base + 3}">${f.title} Big Shiny Mutasi (+${f.base + 3})</option>
-                </select>
-                <button class="btn btn-green btn-sm" style="margin-top:6px;" onclick="App.submitSpecificFishDropdown('${f.label}', '${f.id}')">Kirim Poin ${f.title}</button>
-              </div>
-            `;
-          });
-        }
-        /* ====== AKHIR HALLOWEEN EVE ====== */
-
-        dropdownWrapper.innerHTML = dropdownHtml;
-      },
-
-      submitSpecificFishDropdown(fishName, selectId) {
-        const valSel = document.getElementById(selectId);
-        if (!valSel) return;
-        const selectedOpt = valSel.options[valSel.selectedIndex];
-        const variantName = selectedOpt.text;
-        const points = parseInt(selectedOpt.value) || 2;
-
-        this.submitCatch(`[FORGOTTEN/SPECIFIC] ${variantName}`, points);
+        grid.innerHTML = buttons.map(b => `
+          <div class="catch-card" onclick="App.submitCatch('${b.res}', ${b.pointVal})">
+            <span style="font-weight:800; font-size:10px;">${b.label}</span>
+            <span style="font-weight:900; color:var(--cyan-accent); font-size:12px;">${b.pts}</span>
+          </div>
+        `).join('');
       },
 
       renderPeserta() {
@@ -1552,9 +1626,152 @@
       }
     };
 
+    // LOGIKA AUCTION ENGINE
+    const AuctionApp = {
+      data: { itemName: "Ikan Secret Shiny Mutasi King", openBid: 50000, nextBid: 10000, bin: 250000, highestBid: 0, highestBidder: "" },
+      timerSec: 120, interval: null, isRunning: false, rekap: [],
+
+      setTimer() {
+        let mins = parseFloat(document.getElementById('aucTimerMins').value) || 2;
+        this.timerSec = Math.round(mins * 60);
+        this.updateTimerUI();
+      },
+      startTimer() {
+        if (this.isRunning) return;
+        this.isRunning = true;
+        this.interval = setInterval(() => {
+          if (this.timerSec > 0) { this.timerSec--; this.updateTimerUI(); }
+          else { this.pauseTimer(); this.soldCurrent(); }
+        }, 1000);
+      },
+      pauseTimer() { this.isRunning = false; clearInterval(this.interval); },
+      updateTimerUI() {
+        let m = Math.floor(this.timerSec / 60).toString().padStart(2, '0');
+        let s = (this.timerSec % 60).toString().padStart(2, '0');
+        document.getElementById('aucTimerDisplay').innerText = `⏱ ${m}:${s}`;
+      },
+      applyItem() {
+        this.data.itemName = document.getElementById('aucItemName').value;
+        this.data.openBid = parseFloat(document.getElementById('aucOpenBid').value) || 0;
+        this.data.nextBid = parseFloat(document.getElementById('aucNextBid').value) || 0;
+        this.data.bin = parseFloat(document.getElementById('aucBin').value) || 0;
+        this.resetRound();
+      },
+      resetRound() {
+        this.data.highestBid = 0;
+        this.data.highestBidder = "";
+        document.getElementById('aucSoldModal').classList.add('hidden');
+        this.setTimer();
+        this.updateUI();
+      },
+      parseChat() {
+        let user = document.getElementById('aucSimUser').value || 'Penonton';
+        let msg = document.getElementById('aucSimMsg').value.toLowerCase().trim();
+        if (!msg) return;
+
+        if (msg.includes('bin') || msg.includes('tebus')) {
+          this.data.highestBid = this.data.bin;
+          this.data.highestBidder = user;
+          this.triggerSold(user, this.data.bin, true);
+          document.getElementById('aucSimMsg').value = '';
+          return;
+        }
+
+        let text = msg.replace(/bid/g, '').replace(/o/g, '0').replace(/[^0-9k.,]/g, '');
+        let amt = 0;
+        if (text.includes('k')) {
+          let p = parseFloat(text.replace('k', '').replace(',', '.'));
+          if (!isNaN(p)) amt = p * 1000;
+        } else {
+          let p = parseFloat(text.replace(/\./g, '').replace(/,/g, ''));
+          if (!isNaN(p)) amt = (p > 0 && p < 100) ? p * 1000 : p;
+        }
+
+        let minReq = this.data.highestBid === 0 ? this.data.openBid : (this.data.highestBid + this.data.nextBid);
+        if (amt >= minReq) {
+          this.data.highestBid = amt;
+          this.data.highestBidder = user;
+          this.updateUI();
+        } else {
+          alert(`Bid kurang! Minimal Rp ${minReq.toLocaleString('id-ID')}`);
+        }
+        document.getElementById('aucSimMsg').value = '';
+      },
+      commitManual() {
+        let u = document.getElementById('aucManWinner').value || "Hamba Allah";
+        let a = parseFloat(document.getElementById('aucManAmount').value) || this.data.highestBid;
+        if (a <= 0) { alert("Nominal tidak valid!"); return; }
+        this.data.highestBidder = u;
+        this.data.highestBid = a;
+        this.triggerSold(u, a, false);
+        document.getElementById('aucManWinner').value = '';
+        document.getElementById('aucManAmount').value = '';
+      },
+      soldCurrent() {
+        if (this.data.highestBid > 0) {
+          this.triggerSold(this.data.highestBidder, this.data.highestBid, false);
+        } else {
+          alert("Belum ada bid masuk!");
+        }
+      },
+      triggerSold(winner, amount, isBin) {
+        this.pauseTimer();
+        document.getElementById('aucSoldTag').innerText = isBin ? "⚡ INSTANT BIN / TEBUS" : "🎉 ITEM SOLD / TERJUAL";
+        document.getElementById('aucSoldItem').innerText = this.data.itemName;
+        document.getElementById('aucSoldWinner').innerText = `@${winner}`;
+        document.getElementById('aucSoldAmount').innerText = `Rp ${amount.toLocaleString('id-ID')}`;
+        document.getElementById('aucSoldModal').classList.remove('hidden');
+
+        this.rekap.push({ item: this.data.itemName, winner: winner, amount: amount, isPaid: false });
+        this.renderRekap();
+        this.updateUI();
+      },
+      togglePay(idx, chk) { this.rekap[idx].isPaid = chk.checked; },
+      editItem(idx) {
+        let item = this.rekap[idx];
+        let nw = prompt("Koreksi Nama Pemenang:", item.winner);
+        if (nw === null) return;
+        let na = parseFloat(prompt("Koreksi Harga Akhir (Rp):", item.amount));
+        if (isNaN(na) || na <= 0) { alert("Nominal tidak valid!"); return; }
+        item.winner = nw.trim() || item.winner;
+        item.amount = na;
+        this.renderRekap();
+      },
+      renderRekap() {
+        let tbody = document.getElementById('aucTableBody');
+        document.getElementById('aucCount').innerText = `${this.rekap.length} Item`;
+        if (this.rekap.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#64748b; font-style:italic; padding:8px;">Belum ada rekap barang terjual.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = this.rekap.map((d, i) => `
+          <tr>
+            <td style="color:var(--text-muted); font-weight:bold;">${i+1}</td>
+            <td style="font-weight:700; color:var(--gold);">${d.item}</td>
+            <td style="color:var(--success); font-weight:800;">${d.winner}</td>
+            <td style="text-align:right; font-weight:900; color:var(--cyan-accent);">Rp ${d.amount.toLocaleString('id-ID')}</td>
+            <td style="text-align:center;"><input type="checkbox" ${d.isPaid ? 'checked' : ''} onchange="AuctionApp.togglePay(${i}, this)"></td>
+            <td style="text-align:center;"><button class="btn btn-amber btn-sm" style="padding:2px 6px; font-size:10px;" onclick="AuctionApp.editItem(${i})">Edit</button></td>
+          </tr>
+        `).join('');
+      },
+      updateUI() {
+        document.getElementById('aucObsItem').innerText = this.data.itemName;
+        document.getElementById('aucObsOB').innerText = `Rp ${this.data.openBid.toLocaleString('id-ID')}`;
+        document.getElementById('aucObsNext').innerText = `+Rp ${this.data.nextBid.toLocaleString('id-ID')}`;
+        document.getElementById('aucObsBin').innerText = `Rp ${this.data.bin.toLocaleString('id-ID')}`;
+        document.getElementById('aucObsWinner').innerText = this.data.highestBidder ? `@${this.data.highestBidder}` : "- Belum Ada Penawar -";
+        document.getElementById('aucObsAmount').innerText = this.data.highestBid > 0 ? `Rp ${this.data.highestBid.toLocaleString('id-ID')}` : "Rp 0";
+      }
+    };
+
     window.addEventListener('DOMContentLoaded', () => {
       App.init();
+      AuctionApp.setTimer();
     });
   </script>
+
+  <!-- INJECTOR MINGGUAN -->
+  <script src="galahamuy-injector.js"></script>
 </body>
 </html>
