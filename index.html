@@ -427,7 +427,7 @@
 
       <!-- SEKSI: POINT RUSH CONTROL & SPINWHEEL -->
       <div class="card hidden view-section view-dashboard view-mode-timer no-obs" id="pointRushCard">
-        <div class="card-head">POINT RUSH — SPINWHEEL ACAK TEMPAT (30 LOKASI)</div>
+        <div class="card-head">POINT RUSH — SPINWHEEL ACAK TEMPAT (31 LOKASI)</div>
         <div class="spinwheel-box">
           <div>
             <div style="color:var(--text-muted); font-weight:800; font-size:9px;">LOKASI AKTIF HASIL SPINWHEEL:</div>
@@ -706,10 +706,11 @@
         "TREASURE ROOM", "PLANETARY OBSERVATORY", "LAVA BASIN", "UNDERGROUND CELLAR",
         "SACRED TEMPLE", "STINGRAY SHORES", "COPPER CANYON MINES",
         "SEWERS", "KOHANA LAB", "ANCIENT RUIN", "PIRATE COVE", "PIRATE TREASURE ROOM",
-        "CRYSTAL DEPTHS", "GLOOMCAP GROTTO", "ELEMENTAL ISLAND", "WEATHER MACHINE"
+        "CRYSTAL DEPTHS", "GLOOMCAP GROTTO", "ELEMENTAL ISLAND", "WEATHER MACHINE",
+        "HALLOWS EVE"
       ],
 
-      mitosMaps: ["COPPER CANYON", "ANCIENT JUNGLE", "THRONE ROOM", "UNDERWATER CITY", "SEWERS"],
+      mitosMaps: ["COPPER CANYON", "ANCIENT JUNGLE", "THRONE ROOM", "UNDERWATER CITY", "SEWERS", "HALLOWS EVE"],
 
       locationSpecificFishNames: {
         "ANCIENT JUNGLE": ["RAGNAREX", "THUNDERZILLA"],
@@ -1073,7 +1074,7 @@
         if (this.state.mode !== 'SURVIVAL') return;
         this.state.participants.forEach(p => {
           if (p.status === 'ACTIVE') {
-            const hasPassed = (p.roundCatches || []).some(c => c.includes('SECRET') || c.includes('MITOS') || c.includes('FORGOTTEN') || c.includes('RAGNAREX') || c.includes('HYDRA') || c.includes('EVERBLOOM'));
+            const hasPassed = (p.roundCatches || []).some(c => c.includes('SECRET') || c.includes('MITOS') || c.includes('FORGOTTEN') || c.includes('RAGNAREX') || c.includes('HYDRA') || c.includes('EVERBLOOM') || c.includes('SWEETOOTH') || c.includes('MEAWSOLEUM'));
             if (!hasPassed) p.status = 'ELIMINATED';
             p.roundCatches = [];
           }
@@ -1250,25 +1251,30 @@
         let currLoc = this.state.pointRushLocation;
         let isMitosActive = this.state.mode === 'POINT_RUSH' && this.mitosMaps.includes(currLoc);
 
-        let secretBaseVal = isMitosActive ? 2 : 1;
-        let secretBaseText = isMitosActive ? "Secret Basic (+2)" : "Secret Basic (+1)";
-        let secretMutasiText = isMitosActive ? "Secret Big / Mutasi / Shiny (+3)" : "Secret Big / Mutasi / Shiny (+2)";
-        let secretBigShinyText = isMitosActive ? "Secret Big+Shiny / Big+Mutasi (+4)" : "Secret Big+Shiny / Big+Mutasi (+3)";
-        let secretMaxText = isMitosActive ? "Secret Big Shiny Mutasi (+5)" : "Secret Big Shiny Mutasi (+4)";
+        let dropdownHtml = '';
 
-        let dropdownHtml = `
-          <div class="dropdown-box">
-            <label>Kategori Secret (All Maps):</label>
-            <select id="dropSecretVal" class="input-field" style="width:100%;">
-              <option value="${secretBaseVal}">${secretBaseText}</option>
-              <option value="${secretBaseVal + 1}">${secretMutasiText}</option>
-              <option value="${secretBaseVal + 2}">${secretBigShinyText}</option>
-              <option value="${secretBaseVal + 3}">${secretMaxText}</option>
-            </select>
-            <button class="btn btn-purple btn-sm" style="margin-top:6px;" onclick="App.submitDropdownCatch('dropSecretCat', 'dropSecretVal')">Kirim Poin Secret</button>
-          </div>
-          <input type="hidden" id="dropSecretCat" value="SECRET">
-        `;
+        // Kategori Secret (All Maps) - Dihilangkan khusus untuk Hallows Eve
+        if (currLoc !== 'HALLOWS EVE') {
+          let secretBaseVal = isMitosActive ? 2 : 1;
+          let secretBaseText = isMitosActive ? "Secret Basic (+2)" : "Secret Basic (+1)";
+          let secretMutasiText = isMitosActive ? "Secret Big / Mutasi / Shiny (+3)" : "Secret Big / Mutasi / Shiny (+2)";
+          let secretBigShinyText = isMitosActive ? "Secret Big+Shiny / Big+Mutasi (+4)" : "Secret Big+Shiny / Big+Mutasi (+3)";
+          let secretMaxText = isMitosActive ? "Secret Big Shiny Mutasi (+5)" : "Secret Big Shiny Mutasi (+4)";
+
+          dropdownHtml += `
+            <div class="dropdown-box">
+              <label>Kategori Secret (All Maps):</label>
+              <select id="dropSecretVal" class="input-field" style="width:100%;">
+                <option value="${secretBaseVal}">${secretBaseText}</option>
+                <option value="${secretBaseVal + 1}">${secretMutasiText}</option>
+                <option value="${secretBaseVal + 2}">${secretBigShinyText}</option>
+                <option value="${secretBaseVal + 3}">${secretMaxText}</option>
+              </select>
+              <button class="btn btn-purple btn-sm" style="margin-top:6px;" onclick="App.submitDropdownCatch('dropSecretCat', 'dropSecretVal')">Kirim Poin Secret</button>
+            </div>
+            <input type="hidden" id="dropSecretCat" value="SECRET">
+          `;
+        }
 
         if (this.state.mode !== 'SURVIVAL' && this.state.mode !== 'POINT_RUSH') {
           let bossName = this.state.mode.replace('_', ' ');
@@ -1317,6 +1323,44 @@
               <input type="hidden" id="dropCoreCat" value="SECRET CORE">
             `;
           }
+        }
+
+        if (this.state.mode === 'POINT_RUSH' && currLoc === 'HALLOWS EVE') {
+          dropdownHtml += `
+            <div class="dropdown-box">
+              <label>🔮 SECRET BASIC (Hallows Eve):</label>
+              <select id="dropSecretValHallow" class="input-field" style="width:100%;">
+                <option value="1">Secret Basic (+1)</option>
+                <option value="2">Secret Mutasi / Big / Shiny (+2)</option>
+                <option value="3">Secret Big+Shiny / Big+Mutasi (+3)</option>
+                <option value="4">Secret Big Shiny Mutasi (+4)</option>
+              </select>
+              <button class="btn btn-purple btn-sm" style="margin-top:6px;" onclick="App.submitDropdownCatch('dropSecretCatHallow', 'dropSecretValHallow')">Kirim Poin Secret</button>
+            </div>
+            <input type="hidden" id="dropSecretCatHallow" value="SECRET">
+
+            <div class="dropdown-box">
+              <label>🎃 SWEETOOTH GOURDLING (Hallows Eve):</label>
+              <select id="dropSweetVal" class="input-field" style="width:100%;">
+                <option value="2">Sweetooth Gourdling Basic (+2)</option>
+                <option value="3">Sweetooth Gourdling Mutasi / Big / Shiny (+3)</option>
+                <option value="4">Sweetooth Gourdling Big + Mutasi / Shiny (+4)</option>
+                <option value="5">Sweetooth Gourdling Big Shiny Mutasi (+5)</option>
+              </select>
+              <button class="btn btn-green btn-sm" style="margin-top:6px;" onclick="App.submitSpecificFishDropdown('SWEETOOTH GOURDLING', 'dropSweetVal')">Kirim Poin Sweetooth</button>
+            </div>
+
+            <div class="dropdown-box">
+              <label>🕯️ FORGOTTEN MEAWSOLEUM (Hallows Eve):</label>
+              <select id="dropMeawVal" class="input-field" style="width:100%;">
+                <option value="5">Forgotten Meawsoleum Basic (+5)</option>
+                <option value="6">Forgotten Meawsoleum Mutasi / Big / Shiny (+6)</option>
+                <option value="7">Forgotten Meawsoleum Big + Mutasi / Shiny (+7)</option>
+                <option value="8">Forgotten Meawsoleum Big Shiny Mutasi (+8)</option>
+              </select>
+              <button class="btn btn-green btn-sm" style="margin-top:6px;" onclick="App.submitSpecificFishDropdown('FORGOTTEN MEAWSOLEUM', 'dropMeawVal')">Kirim Poin Meawsoleum</button>
+            </div>
+          `;
         }
 
         if (this.state.mode === 'POINT_RUSH' && this.locationSpecificFishNames[currLoc]) {
@@ -1519,6 +1563,5 @@
       App.init();
     });
   </script>
-  <script src="galahamuy-injector.js"></script>
 </body>
 </html>
