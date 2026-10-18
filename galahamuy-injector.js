@@ -130,7 +130,7 @@
   "lokasi": [
     {
       "n": "FISHERMAN ISLAND",
-      "mitos": true,
+      "mitos": false,
       "mp": 1,
       "tombol": [
         {
@@ -485,6 +485,10 @@
         {
           "label": "MEAWSOLEUM",
           "poin": 5
+        },
+        {
+          "label": "",
+          "poin": 1
         }
       ]
     }
