@@ -10,27 +10,15 @@
       "poin": 1
     },
     {
-      "label": "SECRET BIG",
+      "label": "SECRET BIG/MUTASI/SHINY",
       "poin": 2
     },
     {
-      "label": "SECRET MUTASI",
-      "poin": 2
-    },
-    {
-      "label": "SECRET BIG + MUTASI",
+      "label": "SECRET BIG MUTASI/SHINY",
       "poin": 3
     },
     {
-      "label": "SECRET SHINY",
-      "poin": 2
-    },
-    {
-      "label": "SECRET BIG SHINY",
-      "poin": 3
-    },
-    {
-      "label": "SECRET BIG SHINY MUTASI",
+      "label": "SECRET RATA KANAN",
       "poin": 4
     }
   ],
@@ -480,13 +468,33 @@
       "tombol": [
         {
           "label": "SWEETOOTH GOURDLING",
-          "poin": 2
+          "poin": 2,
+          "v": true
         },
         {
           "label": "MEAWSOLEUM",
-          "poin": 5
+          "poin": 5,
+          "v": true
         }
       ]
+    }
+  ],
+  "varian": [
+    {
+      "label": "BASIC",
+      "poin": 0
+    },
+    {
+      "label": "MUTASI / BIG / SHINY",
+      "poin": 1
+    },
+    {
+      "label": "BIG + MUTASI / SHINY",
+      "poin": 2
+    },
+    {
+      "label": "BIG SHINY MUTASI",
+      "poin": 3
     }
   ]
 };
@@ -495,7 +503,13 @@
   const L = App.pointRushLocations;
   const info = n => MINGGU.lokasi.find(l => l.n === n) || { tombol: [] };
   // baris dengan nama kosong dibuang supaya tidak jadi opsi kosong
-  const bt = a => (a || []).filter(b => b && String(b.label || '').trim()).map(b => ({ label: String(b.label).trim(), res: b.res || String(b.label).trim(), poin: +b.poin || 0 }));
+  const bt = a => (a || []).filter(b => b && String(b.label || '').trim()).map(b => ({ label: String(b.label).trim(), res: b.res || String(b.label).trim(), poin: +b.poin || 0, v: !!b.v }));
+  // Varian otomatis: poin yang diisi di builder = poin BASIC, varian ditambah di atasnya
+  const VAR = (MINGGU.varian && MINGGU.varian.length ? MINGGU.varian : [
+    { label: 'BASIC', poin: 0 }, { label: 'MUTASI / BIG / SHINY', poin: 1 },
+    { label: 'BIG + MUTASI / SHINY', poin: 2 }, { label: 'BIG SHINY MUTASI', poin: 3 }
+  ]).map(v => ({ label: String(v.label || '').trim() || 'BASIC', plus: +v.poin || 0 }));
+  const varItems = (nama, base) => VAR.map(v => ({ label: v.label, res: nama + ' — ' + v.label, poin: (+base || 0) + v.plus }));
   let aktif = [], flat = [];
 
   // 1) Sinkronkan daftar lokasi + data lama (kalau versi App punya) dengan config
@@ -524,10 +538,14 @@
     const sb = loc ? (+loc.sb || 0) : 0;
     g.push({ t: 'SECRET', items: bt(MINGGU.secret).map(x => ({ label: x.label, res: x.res, poin: x.poin + sb })) });
     if (loc) {
-      let it = [];
-      if (loc.mitos) it.push({ label: 'MITOS', res: 'MITOS', poin: +loc.mp || 0 });
-      it = it.concat(bt(loc.tombol));
-      if (it.length) g.push({ t: 'KHUSUS LOKASI: ' + App.state.pointRushLocation, items: it });
+      // Mitos: dropdown sendiri, poin basic = mp, varian ditambah otomatis
+      if (loc.mitos) g.push({ t: 'MITOS (' + loc.n + ')', items: varItems('MITOS', loc.mp) });
+      const rows = bt(loc.tombol);
+      // Ikan spesifik (flag varian): satu dropdown per ikan
+      rows.filter(x => x.v).forEach(x => g.push({ t: '🐟 ' + x.label + ' (' + loc.n + ')', items: varItems(x.label, x.poin) }));
+      // Tombol biasa (poin tetap) tetap digabung dalam satu dropdown
+      const plain = rows.filter(x => !x.v);
+      if (plain.length) g.push({ t: 'KHUSUS LOKASI: ' + loc.n, items: plain });
     } else {
       const it = bt(MINGGU.mode[m]);
       if (it.length) g.push({ t: m.replace(/_/g, ' '), items: it });
