@@ -427,7 +427,7 @@
 
       <!-- SEKSI: POINT RUSH CONTROL & SPINWHEEL -->
       <div class="card hidden view-section view-dashboard view-mode-timer no-obs" id="pointRushCard">
-        <div class="card-head">POINT RUSH — SPINWHEEL ACAK TEMPAT (30 LOKASI)</div>
+        <div class="card-head">POINT RUSH — SPINWHEEL ACAK TEMPAT (31 LOKASI)</div>
         <div class="spinwheel-box">
           <div>
             <div style="color:var(--text-muted); font-weight:800; font-size:9px;">LOKASI AKTIF HASIL SPINWHEEL:</div>
@@ -706,7 +706,8 @@
         "TREASURE ROOM", "PLANETARY OBSERVATORY", "LAVA BASIN", "UNDERGROUND CELLAR",
         "SACRED TEMPLE", "STINGRAY SHORES", "COPPER CANYON MINES",
         "SEWERS", "KOHANA LAB", "ANCIENT RUIN", "PIRATE COVE", "PIRATE TREASURE ROOM",
-        "CRYSTAL DEPTHS", "GLOOMCAP GROTTO", "ELEMENTAL ISLAND", "WEATHER MACHINE"
+        "CRYSTAL DEPTHS", "GLOOMCAP GROTTO", "ELEMENTAL ISLAND", "WEATHER MACHINE",
+        "HALLOWEEN EVE"
       ],
 
       mitosMaps: ["COPPER CANYON", "ANCIENT JUNGLE", "THRONE ROOM", "UNDERWATER CITY", "SEWERS"],
@@ -1380,6 +1381,42 @@
             </div>
           `;
         }
+
+        /* ====== HALLOWEEN EVE: Mitos +1, Phantom Dead Shark +1, Sweetooth Gourd +2 (basic) ====== */
+        if (this.state.mode === 'POINT_RUSH' && currLoc === 'HALLOWEEN EVE') {
+          dropdownHtml += `
+            <div class="dropdown-box">
+              <label>🎃 Kategori Mitos (HALLOWEEN EVE):</label>
+              <select id="dropHalloweenMitosVal" class="input-field" style="width:100%;">
+                <option value="1">Mitos Basic (+1)</option>
+                <option value="2">Mitos Mutasi (+2)</option>
+                <option value="3">Mitos Big Shiny / Mutasi (+3)</option>
+                <option value="4">Mitos Big Shiny Mutasi (+4)</option>
+              </select>
+              <button class="btn btn-gold btn-sm" style="margin-top:6px;" onclick="App.submitDropdownCatch('dropHalloweenMitosCat', 'dropHalloweenMitosVal')">Kirim Poin Mitos</button>
+            </div>
+            <input type="hidden" id="dropHalloweenMitosCat" value="MITOS">
+          `;
+
+          [
+            { label: 'PHANTOM DEAD SHARK', icon: '👻', title: 'Phantom Dead Shark', id: 'dropPhantomVal', base: 1 },
+            { label: 'SWEETOOTH GOURD',    icon: '🍬', title: 'Sweetooth Gourd',    id: 'dropGourdVal',   base: 2 }
+          ].forEach(f => {
+            dropdownHtml += `
+              <div class="dropdown-box">
+                <label>${f.icon} ${f.label} (HALLOWEEN EVE):</label>
+                <select id="${f.id}" class="input-field" style="width:100%;">
+                  <option value="${f.base}">${f.title} Basic (+${f.base})</option>
+                  <option value="${f.base + 1}">${f.title} Mutasi / Big / Shiny (+${f.base + 1})</option>
+                  <option value="${f.base + 2}">${f.title} Big + Mutasi / Shiny (+${f.base + 2})</option>
+                  <option value="${f.base + 3}">${f.title} Big Shiny Mutasi (+${f.base + 3})</option>
+                </select>
+                <button class="btn btn-green btn-sm" style="margin-top:6px;" onclick="App.submitSpecificFishDropdown('${f.label}', '${f.id}')">Kirim Poin ${f.title}</button>
+              </div>
+            `;
+          });
+        }
+        /* ====== AKHIR HALLOWEEN EVE ====== */
 
         dropdownWrapper.innerHTML = dropdownHtml;
       },
